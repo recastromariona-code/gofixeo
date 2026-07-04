@@ -47,13 +47,48 @@ function AuthPage() {
     }
   }, [user, authLoading, showRoleDialog, navigate]);
 
+  const getAuthErrorMessage = (err: unknown): string => {
+    if (!(err instanceof Error)) return "Ocurrió un error inesperado. Intenta de nuevo.";
+    const msg = err.message.toLowerCase();
+    const code = (err as any).code?.toLowerCase?.() ?? "";
+
+    if (code === "email_already_in_use" || msg.includes("already registered") || msg.includes("user already registered")) {
+      return "Este correo ya está registrado. Intenta iniciar sesión o usa otro correo.";
+    }
+    if (code === "user_not_found" || msg.includes("user not found") || msg.includes("no user")) {
+      return "No encontramos una cuenta con este correo. Verifica que esté bien escrito o crea una cuenta.";
+    }
+    if (code === "invalid_credentials" || msg.includes("invalid login credentials")) {
+      return "Correo o contraseña incorrectos. Verifica tus datos e intenta de nuevo.";
+    }
+    if (code === "weak_password" || msg.includes("password should be") || msg.includes("weak")) {
+      return "La contraseña es muy débil. Usa al menos 6 caracteres.";
+    }
+    if (code === "invalid_email" || msg.includes("invalid email")) {
+      return "El formato del correo no es válido. Revisa que esté bien escrito.";
+    }
+    if (code === "email_not_confirmed" || msg.includes("email not confirmed")) {
+      return "Tu correo aún no ha sido confirmado. Revisa tu bandeja de entrada.";
+    }
+    if (code === "rate_limit_exceeded" || msg.includes("rate limit") || msg.includes("too many requests")) {
+      return "Demasiados intentos. Espera un momento y vuelve a intentarlo.";
+    }
+    if (code === "signup_disabled" || msg.includes("signup disabled")) {
+      return "El registro está desactivado temporalmente. Intenta más tarde.";
+    }
+    if (msg.includes("network") || msg.includes("fetch") || msg.includes("connection")) {
+      return "Hubo un problema de conexión. Revisa tu internet e intenta de nuevo.";
+    }
+    return err.message;
+  };
+
   const handleGoogle = async () => {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + "/auth",
     });
     if (result.error) {
-      toast.error("No pudimos iniciar sesión con Google");
+      toast.error(getAuthErrorMessage(result.error));
       setLoading(false);
       return;
     }
