@@ -110,8 +110,8 @@ function BecomeProvider() {
           <h2 className="font-semibold">Sobre ti</h2>
           <div className="mt-4 space-y-4">
             <div>
-              <Label>Bio profesional</Label>
-              <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Cuenta sobre tu experiencia, especialidades y disponibilidad." className="mt-1.5" />
+              <Label>Presentación como especialista del hogar</Label>
+              <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Cuenta sobre tu experiencia, oficios que dominas y disponibilidad." className="mt-1.5" />
             </div>
             <div>
               <Label>Años de experiencia</Label>
