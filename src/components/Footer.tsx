@@ -42,7 +42,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} FIXEO — Encontrar un técnico confiable, tan fácil como pedir un Uber.
+        © {new Date().getFullYear()} FIXEO — Encontrar un especialista del hogar de confianza, tan fácil como pedir un Uber.
       </div>
     </footer>
   );
