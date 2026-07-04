@@ -147,7 +147,7 @@ function AuthPage() {
         setShowRoleDialog(false);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error al crear la cuenta");
+      toast.error(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
