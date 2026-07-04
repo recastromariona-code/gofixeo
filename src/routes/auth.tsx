@@ -42,8 +42,10 @@ function AuthPage() {
   const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user) navigate({ to: "/dashboard" });
-  }, [user, authLoading, navigate]);
+    if (!authLoading && user && !showRoleDialog) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [user, authLoading, showRoleDialog, navigate]);
 
   const handleGoogle = async () => {
     setLoading(true);
