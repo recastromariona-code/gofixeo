@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, Loader2 } from "lucide-react";
+import { Mail, Loader2, Eye, EyeOff } from "lucide-react";
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
@@ -26,6 +26,9 @@ function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">(initialMode ?? "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
