@@ -24,12 +24,12 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold">Categorías</h4>
+          <h4 className="text-sm font-semibold">Técnicos y oficios</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>Aires acondicionados</li>
             <li>Electricistas</li>
             <li>Fontanería</li>
-            <li>Más servicios</li>
+            <li>Más oficios</li>
           </ul>
         </div>
         <div>
