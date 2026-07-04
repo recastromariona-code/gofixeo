@@ -1,17 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Wrench } from "lucide-react";
+import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-muted/30">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-brand">
-              <Wrench className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
-            </div>
-            <span className="text-lg font-bold">FIXEO</span>
-          </div>
+          <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
           <p className="mt-3 text-sm text-muted-foreground">
             El marketplace de especialistas del hogar, técnicos y oficios en Latinoamérica.
           </p>

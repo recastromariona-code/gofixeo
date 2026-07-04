@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Wrench, Mail, Loader2 } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
+import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
+import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
 
 const searchSchema = z.object({ mode: z.enum(["login", "signup"]).optional() });
@@ -77,10 +79,7 @@ function AuthPage() {
       {/* Left / brand */}
       <div className="relative hidden gradient-brand p-12 text-primary-foreground md:flex md:flex-col md:justify-between">
         <Link to="/" className="flex items-center gap-2 text-primary-foreground">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 backdrop-blur">
-            <Wrench className="h-5 w-5" strokeWidth={2.5} />
-          </div>
-          <span className="text-xl font-bold">FIXEO</span>
+          <img src={logoDark.url} alt="FIXEO" className="h-10 w-auto" />
         </Link>
         <div className="max-w-md">
           <h2 className="text-3xl font-bold leading-tight">
@@ -99,11 +98,8 @@ function AuthPage() {
       {/* Right / form */}
       <div className="flex items-center justify-center bg-background p-6 md:p-12">
         <div className="w-full max-w-md">
-          <div className="mb-8 flex items-center gap-2 md:hidden">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-brand">
-              <Wrench className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
-            </div>
-            <span className="text-xl font-bold">FIXEO</span>
+          <div className="mb-8 md:hidden">
+            <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
           </div>
 
           <h1 className="text-2xl font-bold">
