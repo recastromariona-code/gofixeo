@@ -47,7 +47,7 @@ function Landing() {
               <Sparkles className="h-3.5 w-3.5" /> Marketplace de servicios · Latinoamérica
             </span>
             <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              Encuentra profesionales de <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">confianza</span> para cualquier servicio del hogar
+              Encuentra especialistas del hogar de <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">confianza</span> para cualquier técnico u oficio
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
               Solicita cotizaciones en minutos y contrata de forma segura. Tan fácil como pedir un Uber.
