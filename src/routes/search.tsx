@@ -97,12 +97,12 @@ function SearchPage() {
       <section className="border-b border-border bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           <h1 className="text-2xl font-bold sm:text-3xl">
-            {activeCategory ? activeCategory.name : "Buscar servicio"}
+            {activeCategory ? activeCategory.name : "Buscar técnicos y oficios"}
           </h1>
           <p className="mt-1 text-muted-foreground">
             {activeCategory
-              ? `Prestadores especializados en ${activeCategory.name.toLowerCase()}`
-              : "Encuentra profesionales cerca de ti"}
+              ? `Especialistas del hogar en ${activeCategory.name.toLowerCase()}`
+              : "Encuentra especialistas del hogar cerca de ti"}
           </p>
           <form
             onSubmit={(e) => {
