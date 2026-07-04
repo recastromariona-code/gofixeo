@@ -19,8 +19,8 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-semibold">Explorar</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/search" className="hover:text-foreground">Buscar servicio</Link></li>
-            <li><Link to="/become-provider" className="hover:text-foreground">Ser prestador</Link></li>
+            <li><Link to="/search" className="hover:text-foreground">Buscar especialista del hogar</Link></li>
+            <li><Link to="/become-provider" className="hover:text-foreground">Ser prestador de servicios</Link></li>
           </ul>
         </div>
         <div>
