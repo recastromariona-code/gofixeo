@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { updateRole } from "@/lib/profile.functions";
+
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
