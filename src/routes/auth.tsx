@@ -87,7 +87,7 @@ function AuthPage() {
             Servicios del hogar, rápido y de confianza.
           </h2>
           <p className="mt-3 text-primary-foreground/85">
-            Miles de prestadores en Latinoamérica esperando a ayudarte con tu próximo proyecto.
+            Miles de especialistas del hogar en Latinoamérica listos para ayudarte con tu próximo proyecto.
           </p>
         </div>
         <div className="text-xs text-primary-foreground/70">
