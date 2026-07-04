@@ -192,7 +192,7 @@ function ProviderProfile() {
                 <DialogContent className="rounded-2xl">
                   <DialogHeader>
                     <DialogTitle>Solicita una cotización</DialogTitle>
-                    <DialogDescription>Cuéntale al prestador lo que necesitas.</DialogDescription>
+                    <DialogDescription>Cuéntale a este especialista del hogar lo que necesitas.</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
