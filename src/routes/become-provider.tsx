@@ -59,7 +59,7 @@ function BecomeProvider() {
       if (pcErr) throw pcErr;
     },
     onSuccess: () => {
-      toast.success("¡Perfil de prestador creado!");
+      toast.success("¡Perfil de prestador de servicios creado!");
       navigate({ to: "/dashboard" });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
