@@ -62,33 +62,20 @@ function AuthPage() {
 
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      if (mode === "signup") {
-        if (password !== confirmPassword) {
-          toast.error("Las contraseñas no coinciden");
-          setLoading(false);
-          return;
-        }
-        if (password.length < 6) {
-          toast.error("La contraseña debe tener al menos 6 caracteres");
-          setLoading(false);
-          return;
-        }
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin + "/dashboard",
-            data: { full_name: fullName },
-          },
-        });
-        if (error) throw error;
-        toast.success("Cuenta creada. ¡Bienvenido a FIXEO!");
-        setShowRoleDialog(true);
-        setLoading(false);
+    if (mode === "signup") {
+      if (password !== confirmPassword) {
+        toast.error("Las contraseñas no coinciden");
         return;
       }
+      if (password.length < 6) {
+        toast.error("La contraseña debe tener al menos 6 caracteres");
+        return;
+      }
+      setShowRoleDialog(true);
+      return;
+    }
+    setLoading(true);
+    try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       toast.success("Bienvenido de nuevo");
@@ -103,15 +90,29 @@ function AuthPage() {
   const selectRole = async (role: "client" | "provider") => {
     setLoading(true);
     try {
-      await updateRole({ data: { role } });
-      toast.success("¡Listo! Redirigiendo...");
-      if (role === "provider") {
-        navigate({ to: "/become-provider" });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + "/dashboard",
+          data: { full_name: fullName, role },
+        },
+      });
+      if (error) throw error;
+
+      if (data.session) {
+        toast.success("¡Cuenta creada! Redirigiendo...");
+        if (role === "provider") {
+          navigate({ to: "/become-provider" });
+        } else {
+          navigate({ to: "/search" });
+        }
       } else {
-        navigate({ to: "/search" });
+        toast.success("Revisa tu correo para confirmar tu cuenta.");
+        setShowRoleDialog(false);
       }
-    } catch {
-      toast.error("No pudimos guardar tu elección. Intenta de nuevo.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al crear la cuenta");
     } finally {
       setLoading(false);
     }
