@@ -111,7 +111,7 @@ function Landing() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               { icon: Search, title: "1. Cuéntanos qué necesitas", text: "Describe tu proyecto o elige una categoría." },
-              { icon: MessageCircle, title: "2. Recibe cotizaciones", text: "Los prestadores te contactan por chat o WhatsApp." },
+              { icon: MessageCircle, title: "2. Recibe cotizaciones", text: "Los especialistas del hogar te contactan por chat o WhatsApp." },
               { icon: ShieldCheck, title: "3. Contrata con confianza", text: "Ve reseñas verificadas y elige al mejor." },
             ].map((s, i) => (
               <motion.div
