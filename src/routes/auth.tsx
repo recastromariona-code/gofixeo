@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Wrench, Mail, Loader2 } from "lucide-react";
+import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
+import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
 
 const searchSchema = z.object({ mode: z.enum(["login", "signup"]).optional() });
