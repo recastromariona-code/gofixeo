@@ -77,8 +77,8 @@ function BecomeProvider() {
               <Wrench className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Crea tu perfil de prestador</h1>
-              <p className="text-sm text-muted-foreground">Gratis. Publícate y recibe clientes en tu ciudad.</p>
+              <h1 className="text-2xl font-bold">Regístrate como prestador de servicios</h1>
+              <p className="text-sm text-muted-foreground">Gratis. Publica los oficios que dominas y recibe clientes en tu ciudad.</p>
             </div>
           </div>
         </div>
