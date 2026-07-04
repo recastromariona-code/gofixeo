@@ -97,12 +97,12 @@ function SearchPage() {
       <section className="border-b border-border bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           <h1 className="text-2xl font-bold sm:text-3xl">
-            {activeCategory ? activeCategory.name : "Buscar servicio"}
+            {activeCategory ? activeCategory.name : "Buscar técnicos y oficios"}
           </h1>
           <p className="mt-1 text-muted-foreground">
             {activeCategory
-              ? `Prestadores especializados en ${activeCategory.name.toLowerCase()}`
-              : "Encuentra profesionales cerca de ti"}
+              ? `Especialistas del hogar en ${activeCategory.name.toLowerCase()}`
+              : "Encuentra especialistas del hogar cerca de ti"}
           </p>
           <form
             onSubmit={(e) => {
@@ -162,9 +162,9 @@ function SearchPage() {
             </div>
           ) : providers.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
-              <h3 className="text-lg font-semibold">Aún no hay prestadores</h3>
+              <h3 className="text-lg font-semibold">Aún no hay especialistas disponibles</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sé el primero en publicar servicios en esta categoría.
+                Sé el primer prestador de servicios en esta categoría.
               </p>
               <Button asChild className="mt-4 gradient-brand rounded-xl">
                 <Link to="/become-provider">Ofrecer mis servicios</Link>

@@ -28,7 +28,7 @@ export function ProviderCard({ provider }: { provider: ProviderCardData }) {
       </Avatar>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="truncate font-semibold text-foreground">{provider.full_name ?? "Prestador"}</h3>
+          <h3 className="truncate font-semibold text-foreground">{provider.full_name ?? "Especialista del hogar"}</h3>
           {provider.is_verified && (
             <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
               <BadgeCheck className="h-3 w-3" /> Verificado

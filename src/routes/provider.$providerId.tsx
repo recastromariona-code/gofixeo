@@ -116,7 +116,7 @@ function ProviderProfile() {
       <div className="flex min-h-screen flex-col bg-background">
         <Navbar />
         <div className="mx-auto max-w-5xl p-10 text-center">
-          <h1 className="text-2xl font-bold">Prestador no encontrado</h1>
+          <h1 className="text-2xl font-bold">Especialista del hogar no encontrado</h1>
           <Button asChild className="mt-4"><Link to="/search">Volver a buscar</Link></Button>
         </div>
       </div>
@@ -192,7 +192,7 @@ function ProviderProfile() {
                 <DialogContent className="rounded-2xl">
                   <DialogHeader>
                     <DialogTitle>Solicita una cotización</DialogTitle>
-                    <DialogDescription>Cuéntale al prestador lo que necesitas.</DialogDescription>
+                    <DialogDescription>Cuéntale a este especialista del hogar lo que necesitas.</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -274,7 +274,7 @@ function ProviderProfile() {
                 </div>
               ))}
               {(data.services ?? []).length === 0 && (
-                <p className="text-sm text-muted-foreground">Este prestador aún no publicó servicios detallados. Puedes solicitarle una cotización directamente.</p>
+                <p className="text-sm text-muted-foreground">Este especialista del hogar aún no publicó servicios detallados. Puedes solicitarle una cotización directamente.</p>
               )}
             </div>
           </section>

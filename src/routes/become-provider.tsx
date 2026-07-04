@@ -59,7 +59,7 @@ function BecomeProvider() {
       if (pcErr) throw pcErr;
     },
     onSuccess: () => {
-      toast.success("¡Perfil de prestador creado!");
+      toast.success("¡Perfil de prestador de servicios creado!");
       navigate({ to: "/dashboard" });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
@@ -77,8 +77,8 @@ function BecomeProvider() {
               <Wrench className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Crea tu perfil de prestador</h1>
-              <p className="text-sm text-muted-foreground">Gratis. Publícate y recibe clientes en tu ciudad.</p>
+              <h1 className="text-2xl font-bold">Regístrate como prestador de servicios</h1>
+              <p className="text-sm text-muted-foreground">Gratis. Publica los oficios que dominas y recibe clientes en tu ciudad.</p>
             </div>
           </div>
         </div>
@@ -110,8 +110,8 @@ function BecomeProvider() {
           <h2 className="font-semibold">Sobre ti</h2>
           <div className="mt-4 space-y-4">
             <div>
-              <Label>Bio profesional</Label>
-              <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Cuenta sobre tu experiencia, especialidades y disponibilidad." className="mt-1.5" />
+              <Label>Presentación como especialista del hogar</Label>
+              <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Cuenta sobre tu experiencia, oficios que dominas y disponibilidad." className="mt-1.5" />
             </div>
             <div>
               <Label>Años de experiencia</Label>

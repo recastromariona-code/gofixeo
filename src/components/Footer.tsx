@@ -13,23 +13,23 @@ export function Footer() {
             <span className="text-lg font-bold">FIXEO</span>
           </div>
           <p className="mt-3 text-sm text-muted-foreground">
-            El marketplace de servicios técnicos y del hogar en Latinoamérica.
+            El marketplace de especialistas del hogar, técnicos y oficios en Latinoamérica.
           </p>
         </div>
         <div>
           <h4 className="text-sm font-semibold">Explorar</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/search" className="hover:text-foreground">Buscar servicio</Link></li>
-            <li><Link to="/become-provider" className="hover:text-foreground">Ser prestador</Link></li>
+            <li><Link to="/search" className="hover:text-foreground">Buscar especialista del hogar</Link></li>
+            <li><Link to="/become-provider" className="hover:text-foreground">Ser prestador de servicios</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold">Categorías</h4>
+          <h4 className="text-sm font-semibold">Técnicos y oficios</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>Aires acondicionados</li>
             <li>Electricistas</li>
             <li>Fontanería</li>
-            <li>Más servicios</li>
+            <li>Más oficios</li>
           </ul>
         </div>
         <div>
@@ -42,7 +42,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} FIXEO — Encontrar un técnico confiable, tan fácil como pedir un Uber.
+        © {new Date().getFullYear()} FIXEO — Encontrar un especialista del hogar de confianza, tan fácil como pedir un Uber.
       </div>
     </footer>
   );

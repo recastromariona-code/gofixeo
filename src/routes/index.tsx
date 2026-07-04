@@ -47,7 +47,7 @@ function Landing() {
               <Sparkles className="h-3.5 w-3.5" /> Marketplace de servicios · Latinoamérica
             </span>
             <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              Encuentra profesionales de <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">confianza</span> para cualquier servicio del hogar
+              Encuentra especialistas del hogar de <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">confianza</span> para cualquier técnico u oficio
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
               Solicita cotizaciones en minutos y contrata de forma segura. Tan fácil como pedir un Uber.
@@ -76,10 +76,10 @@ function Landing() {
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="gradient-brand rounded-xl">
-                <Link to="/search">Buscar servicio</Link>
+                <Link to="/search">Buscar especialista del hogar</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-xl">
-                <Link to="/become-provider">Quiero ofrecer mis servicios</Link>
+                <Link to="/become-provider">Quiero ser prestador de servicios</Link>
               </Button>
             </div>
           </motion.div>
@@ -90,8 +90,8 @@ function Landing() {
       <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-bold sm:text-3xl">Explora por categoría</h2>
-            <p className="mt-1 text-muted-foreground">Los servicios más solicitados del hogar</p>
+            <h2 className="text-2xl font-bold sm:text-3xl">Explora categorías de técnicos y oficios</h2>
+            <p className="mt-1 text-muted-foreground">Los servicios del hogar más solicitados</p>
           </div>
           <Link to="/search" className="hidden text-sm font-medium text-primary hover:underline sm:inline-flex">
             Ver todo <ArrowRight className="ml-1 inline h-4 w-4" />
@@ -111,7 +111,7 @@ function Landing() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               { icon: Search, title: "1. Cuéntanos qué necesitas", text: "Describe tu proyecto o elige una categoría." },
-              { icon: MessageCircle, title: "2. Recibe cotizaciones", text: "Los prestadores te contactan por chat o WhatsApp." },
+              { icon: MessageCircle, title: "2. Recibe cotizaciones", text: "Los especialistas del hogar te contactan por chat o WhatsApp." },
               { icon: ShieldCheck, title: "3. Contrata con confianza", text: "Ve reseñas verificadas y elige al mejor." },
             ].map((s, i) => (
               <motion.div
@@ -137,13 +137,13 @@ function Landing() {
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-brand p-8 shadow-elevated md:p-14">
           <div className="relative z-10 max-w-2xl text-primary-foreground">
-            <h2 className="text-3xl font-bold sm:text-4xl">¿Eres un profesional?</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">¿Eres técnico o dominas un oficio?</h2>
             <p className="mt-3 text-primary-foreground/90">
-              Consigue clientes en tu ciudad. Publica tus servicios gratis y recibe cotizaciones directamente en tu WhatsApp.
+              Consigue clientes en tu ciudad. Regístrate como prestador de servicios gratis y recibe cotizaciones directamente en tu WhatsApp.
             </p>
             <div className="mt-6">
               <Button asChild size="lg" variant="secondary" className="rounded-xl">
-                <Link to="/become-provider">Crear perfil de prestador</Link>
+                <Link to="/become-provider">Registrarme como prestador de servicios</Link>
               </Button>
             </div>
           </div>
