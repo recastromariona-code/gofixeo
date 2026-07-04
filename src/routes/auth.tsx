@@ -7,7 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, Loader2, Eye, EyeOff, Home, Wrench } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
@@ -31,10 +39,13 @@ function AuthPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user) navigate({ to: "/dashboard" });
-  }, [user, authLoading, navigate]);
+    if (!authLoading && user && !showRoleDialog) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [user, authLoading, showRoleDialog, navigate]);
 
   const handleGoogle = async () => {
     setLoading(true);
@@ -51,37 +62,57 @@ function AuthPage() {
 
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "signup") {
+      if (password !== confirmPassword) {
+        toast.error("Las contraseñas no coinciden");
+        return;
+      }
+      if (password.length < 6) {
+        toast.error("La contraseña debe tener al menos 6 caracteres");
+        return;
+      }
+      setShowRoleDialog(true);
+      return;
+    }
     setLoading(true);
     try {
-      if (mode === "signup") {
-        if (password !== confirmPassword) {
-          toast.error("Las contraseñas no coinciden");
-          setLoading(false);
-          return;
-        }
-        if (password.length < 6) {
-          toast.error("La contraseña debe tener al menos 6 caracteres");
-          setLoading(false);
-          return;
-        }
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin + "/dashboard",
-            data: { full_name: fullName },
-          },
-        });
-        if (error) throw error;
-        toast.success("Cuenta creada. ¡Bienvenido a FIXEO!");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("Bienvenido de nuevo");
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      toast.success("Bienvenido de nuevo");
       navigate({ to: "/dashboard" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Error de autenticación");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectRole = async (role: "client" | "provider") => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + "/dashboard",
+          data: { full_name: fullName, role },
+        },
+      });
+      if (error) throw error;
+
+      if (data.session) {
+        toast.success("¡Cuenta creada! Redirigiendo...");
+        if (role === "provider") {
+          navigate({ to: "/become-provider" });
+        } else {
+          navigate({ to: "/search" });
+        }
+      } else {
+        toast.success("Revisa tu correo para confirmar tu cuenta.");
+        setShowRoleDialog(false);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al crear la cuenta");
     } finally {
       setLoading(false);
     }
@@ -227,6 +258,53 @@ function AuthPage() {
           </p>
         </div>
       </div>
+
+      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+        <DialogContent className="max-w-md sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">
+              ¿Cómo quieres usar FIXEO?
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Elige una opción para personalizar tu experiencia. Puedes cambiarlo después.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => selectRole("client")}
+              className="group flex flex-col items-center gap-3 rounded-2xl border bg-card p-6 text-center transition hover:border-primary/40 hover:bg-accent/40 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:scale-110">
+                <Home className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Quiero contratar</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Busca especialistas del hogar y solicita cotizaciones.
+                </p>
+              </div>
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => selectRole("provider")}
+              className="group flex flex-col items-center gap-3 rounded-2xl border bg-card p-6 text-center transition hover:border-primary/40 hover:bg-accent/40 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:scale-110">
+                <Wrench className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Quiero prestar servicios</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Crea tu perfil como prestador y recibe solicitudes.
+                </p>
+              </div>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
