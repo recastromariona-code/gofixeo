@@ -85,17 +85,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FIXEO — Marketplace de servicios del hogar en Latinoamérica" },
+      { title: "FIXEO — Encuentra especialistas del hogar en Latinoamérica" },
       {
         name: "description",
         content:
-          "Encuentra profesionales de confianza para cualquier servicio del hogar. Cotiza en minutos y contrata seguro.",
+          "Encuentra especialistas del hogar de confianza para técnicos y oficios. Solicita cotizaciones en minutos y contrata prestadores de servicios seguros.",
       },
-      { property: "og:title", content: "FIXEO — Servicios del hogar" },
+      { property: "og:title", content: "FIXEO — Especialistas del hogar" },
       {
         property: "og:description",
         content:
-          "Marketplace para contratar electricistas, fontaneros, técnicos de aires y más en Latinoamérica.",
+          "Marketplace para contratar electricistas, fontaneros, técnicos de aires y otros oficios del hogar en Latinoamérica.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
