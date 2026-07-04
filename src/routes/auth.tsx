@@ -39,6 +39,7 @@ function AuthPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) navigate({ to: "/dashboard" });
