@@ -7,7 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, Loader2, Eye, EyeOff, Home, Wrench } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { updateRole } from "@/lib/profile.functions";
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
