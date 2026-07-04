@@ -116,6 +116,47 @@ export type Database = {
           },
         ]
       }
+      portfolio_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          project_date: string | null
+          provider_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          project_date?: string | null
+          provider_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          project_date?: string | null
+          provider_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_items_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -181,43 +222,64 @@ export type Database = {
       }
       providers: {
         Row: {
+          availability: string | null
           bio: string | null
           certifications: string[] | null
           created_at: string
+          currency: string | null
           gallery_urls: string[] | null
+          headline: string | null
+          hourly_rate_max: number | null
+          hourly_rate_min: number | null
           id: string
           is_verified: boolean | null
           rating: number | null
           reviews_count: number | null
           service_areas: string[] | null
+          specialties: string[] | null
+          tags: string[] | null
           updated_at: string
           whatsapp_number: string | null
           years_experience: number | null
         }
         Insert: {
+          availability?: string | null
           bio?: string | null
           certifications?: string[] | null
           created_at?: string
+          currency?: string | null
           gallery_urls?: string[] | null
+          headline?: string | null
+          hourly_rate_max?: number | null
+          hourly_rate_min?: number | null
           id: string
           is_verified?: boolean | null
           rating?: number | null
           reviews_count?: number | null
           service_areas?: string[] | null
+          specialties?: string[] | null
+          tags?: string[] | null
           updated_at?: string
           whatsapp_number?: string | null
           years_experience?: number | null
         }
         Update: {
+          availability?: string | null
           bio?: string | null
           certifications?: string[] | null
           created_at?: string
+          currency?: string | null
           gallery_urls?: string[] | null
+          headline?: string | null
+          hourly_rate_max?: number | null
+          hourly_rate_min?: number | null
           id?: string
           is_verified?: boolean | null
           rating?: number | null
           reviews_count?: number | null
           service_areas?: string[] | null
+          specialties?: string[] | null
+          tags?: string[] | null
           updated_at?: string
           whatsapp_number?: string | null
           years_experience?: number | null
