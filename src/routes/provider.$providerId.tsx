@@ -274,7 +274,7 @@ function ProviderProfile() {
                 </div>
               ))}
               {(data.services ?? []).length === 0 && (
-                <p className="text-sm text-muted-foreground">Este prestador aún no publicó servicios detallados. Puedes solicitarle una cotización directamente.</p>
+                <p className="text-sm text-muted-foreground">Este especialista del hogar aún no publicó servicios detallados. Puedes solicitarle una cotización directamente.</p>
               )}
             </div>
           </section>
