@@ -76,10 +76,10 @@ function Landing() {
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="gradient-brand rounded-xl">
-                <Link to="/search">Buscar servicio</Link>
+                <Link to="/search">Buscar especialista del hogar</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-xl">
-                <Link to="/become-provider">Quiero ofrecer mis servicios</Link>
+                <Link to="/become-provider">Quiero ser prestador de servicios</Link>
               </Button>
             </div>
           </motion.div>
