@@ -94,12 +94,12 @@ function Dashboard() {
           <div>
             <h1 className="text-2xl font-bold sm:text-3xl">Hola, {profile?.full_name ?? "bienvenido"} 👋</h1>
             <p className="text-sm text-muted-foreground">
-              {isProvider ? "Panel del prestador" : "Tus solicitudes y contrataciones"}
+              {isProvider ? "Panel del prestador de servicios" : "Tus solicitudes y contrataciones"}
             </p>
           </div>
           {!isProvider && (
             <Button asChild variant="outline" className="rounded-xl">
-              <Link to="/become-provider">Convertirme en prestador</Link>
+              <Link to="/become-provider">Ser prestador de servicios</Link>
             </Button>
           )}
         </div>
