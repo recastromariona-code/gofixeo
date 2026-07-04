@@ -255,6 +255,53 @@ function AuthPage() {
           </p>
         </div>
       </div>
+
+      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+        <DialogContent className="max-w-md sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">
+              ¿Cómo quieres usar FIXEO?
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Elige una opción para personalizar tu experiencia. Puedes cambiarlo después.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => selectRole("client")}
+              className="group flex flex-col items-center gap-3 rounded-2xl border bg-card p-6 text-center transition hover:border-primary/40 hover:bg-accent/40 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:scale-110">
+                <Home className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Quiero contratar</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Busca especialistas del hogar y solicita cotizaciones.
+                </p>
+              </div>
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => selectRole("provider")}
+              className="group flex flex-col items-center gap-3 rounded-2xl border bg-card p-6 text-center transition hover:border-primary/40 hover:bg-accent/40 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:scale-110">
+                <Wrench className="h-7 w-7" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Quiero prestar servicios</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Crea tu perfil como prestador y recibe solicitudes.
+                </p>
+              </div>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
