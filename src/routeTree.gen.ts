@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProviderProviderIdRouteImport } from './routes/provider.$providerId'
+import { Route as ChatRequestIdRouteImport } from './routes/chat.$requestId'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -28,35 +30,64 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProviderProviderIdRoute = ProviderProviderIdRouteImport.update({
+  id: '/provider/$providerId',
+  path: '/provider/$providerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRequestIdRoute = ChatRequestIdRouteImport.update({
+  id: '/chat/$requestId',
+  path: '/chat/$requestId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/search'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/chat/$requestId'
+    | '/provider/$providerId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/search'
-  id: '__root__' | '/' | '/auth' | '/search'
+  to: '/' | '/auth' | '/search' | '/chat/$requestId' | '/provider/$providerId'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/chat/$requestId'
+    | '/provider/$providerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   SearchRoute: typeof SearchRoute
+  ChatRequestIdRoute: typeof ChatRequestIdRoute
+  ProviderProviderIdRoute: typeof ProviderProviderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +113,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provider/$providerId': {
+      id: '/provider/$providerId'
+      path: '/provider/$providerId'
+      fullPath: '/provider/$providerId'
+      preLoaderRoute: typeof ProviderProviderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat/$requestId': {
+      id: '/chat/$requestId'
+      path: '/chat/$requestId'
+      fullPath: '/chat/$requestId'
+      preLoaderRoute: typeof ChatRequestIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +134,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   SearchRoute: SearchRoute,
+  ChatRequestIdRoute: ChatRequestIdRoute,
+  ProviderProviderIdRoute: ProviderProviderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
