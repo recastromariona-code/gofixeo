@@ -98,11 +98,8 @@ function AuthPage() {
       {/* Right / form */}
       <div className="flex items-center justify-center bg-background p-6 md:p-12">
         <div className="w-full max-w-md">
-          <div className="mb-8 flex items-center gap-2 md:hidden">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-brand">
-              <Wrench className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
-            </div>
-            <span className="text-xl font-bold">FIXEO</span>
+          <div className="mb-8 md:hidden">
+            <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
           </div>
 
           <h1 className="text-2xl font-bold">
