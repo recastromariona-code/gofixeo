@@ -162,9 +162,9 @@ function SearchPage() {
             </div>
           ) : providers.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
-              <h3 className="text-lg font-semibold">Aún no hay prestadores</h3>
+              <h3 className="text-lg font-semibold">Aún no hay especialistas disponibles</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sé el primero en publicar servicios en esta categoría.
+                Sé el primer prestador de servicios en esta categoría.
               </p>
               <Button asChild className="mt-4 gradient-brand rounded-xl">
                 <Link to="/become-provider">Ofrecer mis servicios</Link>
