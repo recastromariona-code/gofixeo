@@ -83,14 +83,33 @@ function AuthPage() {
         });
         if (error) throw error;
         toast.success("Cuenta creada. ¡Bienvenido a FIXEO!");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("Bienvenido de nuevo");
+        setShowRoleDialog(true);
+        setLoading(false);
+        return;
       }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      toast.success("Bienvenido de nuevo");
       navigate({ to: "/dashboard" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Error de autenticación");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectRole = async (role: "client" | "provider") => {
+    setLoading(true);
+    try {
+      await updateRole({ data: { role } });
+      toast.success("¡Listo! Redirigiendo...");
+      if (role === "provider") {
+        navigate({ to: "/become-provider" });
+      } else {
+        navigate({ to: "/search" });
+      }
+    } catch {
+      toast.error("No pudimos guardar tu elección. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
