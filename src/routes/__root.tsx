@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Encuentra especialistas del hogar de confianza para técnicos y oficios. Solicita cotizaciones en minutos y contrata prestadores de servicios seguros.",
       },
-      { property: "og:title", content: "FIXEO — Especialistas del hogar" },
+      { property: "og:title", content: "FIXEO — Encuentra especialistas del hogar en Latinoamérica" },
       {
         property: "og:description",
         content:
@@ -99,6 +99,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "FIXEO — Encuentra especialistas del hogar en Latinoamérica" },
+      { name: "description", content: "Encuentra especialistas del hogar de confianza para técnicos y oficios. Solicita cotizaciones en minutos y contrata prestadores de servicios seguros." },
+      { property: "og:description", content: "Encuentra especialistas del hogar de confianza para técnicos y oficios. Solicita cotizaciones en minutos y contrata prestadores de servicios seguros." },
+      { name: "twitter:description", content: "Encuentra especialistas del hogar de confianza para técnicos y oficios. Solicita cotizaciones en minutos y contrata prestadores de servicios seguros." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5ab366c3-3f97-4f04-9424-f809806e3d01/id-preview-20b4a174--26be9533-3df7-4793-8bc3-d189da2926f5.lovable.app-1783197176041.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5ab366c3-3f97-4f04-9424-f809806e3d01/id-preview-20b4a174--26be9533-3df7-4793-8bc3-d189da2926f5.lovable.app-1783197176041.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
