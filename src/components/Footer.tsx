@@ -13,7 +13,7 @@ export function Footer() {
             <span className="text-lg font-bold">FIXEO</span>
           </div>
           <p className="mt-3 text-sm text-muted-foreground">
-            El marketplace de servicios técnicos y del hogar en Latinoamérica.
+            El marketplace de especialistas del hogar, técnicos y oficios en Latinoamérica.
           </p>
         </div>
         <div>
