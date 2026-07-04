@@ -137,13 +137,13 @@ function Landing() {
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-brand p-8 shadow-elevated md:p-14">
           <div className="relative z-10 max-w-2xl text-primary-foreground">
-            <h2 className="text-3xl font-bold sm:text-4xl">¿Eres un profesional?</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">¿Eres técnico o dominas un oficio?</h2>
             <p className="mt-3 text-primary-foreground/90">
-              Consigue clientes en tu ciudad. Publica tus servicios gratis y recibe cotizaciones directamente en tu WhatsApp.
+              Consigue clientes en tu ciudad. Regístrate como prestador de servicios gratis y recibe cotizaciones directamente en tu WhatsApp.
             </p>
             <div className="mt-6">
               <Button asChild size="lg" variant="secondary" className="rounded-xl">
-                <Link to="/become-provider">Crear perfil de prestador</Link>
+                <Link to="/become-provider">Registrarme como prestador de servicios</Link>
               </Button>
             </div>
           </div>
