@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Wrench, Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
+import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
