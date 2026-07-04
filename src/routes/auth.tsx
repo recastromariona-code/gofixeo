@@ -54,6 +54,16 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
+        if (password !== confirmPassword) {
+          toast.error("Las contraseñas no coinciden");
+          setLoading(false);
+          return;
+        }
+        if (password.length < 6) {
+          toast.error("La contraseña debe tener al menos 6 caracteres");
+          setLoading(false);
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
