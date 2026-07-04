@@ -116,7 +116,7 @@ function AuthPage() {
       toast.success("Bienvenido de nuevo");
       navigate({ to: "/dashboard" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error de autenticación");
+      toast.error(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
