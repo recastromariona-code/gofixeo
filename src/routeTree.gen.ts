@@ -9,38 +9,168 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BecomeProviderRouteImport } from './routes/become-provider'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProviderProviderIdRouteImport } from './routes/provider.$providerId'
+import { Route as ChatRequestIdRouteImport } from './routes/chat.$requestId'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BecomeProviderRoute = BecomeProviderRouteImport.update({
+  id: '/become-provider',
+  path: '/become-provider',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProviderProviderIdRoute = ProviderProviderIdRouteImport.update({
+  id: '/provider/$providerId',
+  path: '/provider/$providerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRequestIdRoute = ChatRequestIdRouteImport.update({
+  id: '/chat/$requestId',
+  path: '/chat/$requestId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/become-provider': typeof BecomeProviderRoute
+  '/dashboard': typeof DashboardRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/become-provider': typeof BecomeProviderRoute
+  '/dashboard': typeof DashboardRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/become-provider': typeof BecomeProviderRoute
+  '/dashboard': typeof DashboardRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/chat/$requestId': typeof ChatRequestIdRoute
+  '/provider/$providerId': typeof ProviderProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/become-provider'
+    | '/dashboard'
+    | '/search'
+    | '/settings'
+    | '/chat/$requestId'
+    | '/provider/$providerId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/become-provider'
+    | '/dashboard'
+    | '/search'
+    | '/settings'
+    | '/chat/$requestId'
+    | '/provider/$providerId'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/become-provider'
+    | '/dashboard'
+    | '/search'
+    | '/settings'
+    | '/chat/$requestId'
+    | '/provider/$providerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  BecomeProviderRoute: typeof BecomeProviderRoute
+  DashboardRoute: typeof DashboardRoute
+  SearchRoute: typeof SearchRoute
+  SettingsRoute: typeof SettingsRoute
+  ChatRequestIdRoute: typeof ChatRequestIdRoute
+  ProviderProviderIdRoute: typeof ProviderProviderIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/become-provider': {
+      id: '/become-provider'
+      path: '/become-provider'
+      fullPath: '/become-provider'
+      preLoaderRoute: typeof BecomeProviderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +178,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provider/$providerId': {
+      id: '/provider/$providerId'
+      path: '/provider/$providerId'
+      fullPath: '/provider/$providerId'
+      preLoaderRoute: typeof ProviderProviderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat/$requestId': {
+      id: '/chat/$requestId'
+      path: '/chat/$requestId'
+      fullPath: '/chat/$requestId'
+      preLoaderRoute: typeof ChatRequestIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  BecomeProviderRoute: BecomeProviderRoute,
+  DashboardRoute: DashboardRoute,
+  SearchRoute: SearchRoute,
+  SettingsRoute: SettingsRoute,
+  ChatRequestIdRoute: ChatRequestIdRoute,
+  ProviderProviderIdRoute: ProviderProviderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
