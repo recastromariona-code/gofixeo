@@ -90,8 +90,8 @@ function Landing() {
       <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-bold sm:text-3xl">Explora por categoría</h2>
-            <p className="mt-1 text-muted-foreground">Los servicios más solicitados del hogar</p>
+            <h2 className="text-2xl font-bold sm:text-3xl">Explora categorías de técnicos y oficios</h2>
+            <p className="mt-1 text-muted-foreground">Los servicios del hogar más solicitados</p>
           </div>
           <Link to="/search" className="hidden text-sm font-medium text-primary hover:underline sm:inline-flex">
             Ver todo <ArrowRight className="ml-1 inline h-4 w-4" />
