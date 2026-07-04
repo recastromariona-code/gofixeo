@@ -131,7 +131,7 @@
   * { border-color: var(--color-border); }
   html { -webkit-font-smoothing: antialiased; }
   body {
-    background-color: var(--color-background);
+    background-color: orange;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
