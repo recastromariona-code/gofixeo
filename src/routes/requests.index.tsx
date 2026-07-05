@@ -50,7 +50,7 @@ function RequestsPage() {
       const { data, error } = await supabase
         .from("quote_requests")
         .select(`id, title, description, status, city, urgency, created_at, preferred_date, budget_min, budget_max,
-                 category:categories(name), quotes(count)`)
+                 category:categories(name), quotes!quotes_request_id_fkey(count)`)
         .eq("client_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
