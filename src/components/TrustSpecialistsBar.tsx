@@ -12,21 +12,21 @@ export type TrustSpecialist = {
 const DEFAULT_SPECIALISTS: TrustSpecialist[] = [
   {
     id: "1",
-    name: "María",
+    name: "Heather",
     role: "Aire acondicionado",
     image: "/trust/specialist-1.png",
     searchQuery: "Aire acondicionado",
   },
   {
     id: "2",
-    name: "Carlos",
+    name: "Edgar",
     role: "Climatización",
     image: "/trust/specialist-2.png",
     searchQuery: "Climatización",
   },
   {
     id: "3",
-    name: "Ricardo",
+    name: "Eduardo",
     role: "Mantenimiento",
     image: "/trust/specialist-3.png",
     searchQuery: "Mantenimiento",
