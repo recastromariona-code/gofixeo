@@ -85,6 +85,21 @@ function Dashboard() {
     enabled: !!user && isProvider,
   });
 
+  const { data: matchedRequests = [] } = useQuery({
+    queryKey: ["matchedRequests", user?.id],
+    enabled: !!user && isProvider,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quote_requests")
+        .select("id, title, description, city, urgency, created_at, budget_min, budget_max, category:categories(name)")
+        .is("provider_id", null)
+        .in("status", ["pending", "quoted"])
+        .order("created_at", { ascending: false })
+        .limit(8);
+      return data ?? [];
+    },
+  });
+
   const { data: favorites = [] } = useQuery({
     queryKey: ["favorites", user?.id],
     queryFn: async () => {
@@ -143,9 +158,10 @@ function Dashboard() {
               <StatCard icon={Users} label="Reseñas" value={String(providerStats?.reviews_count ?? 0)} />
             </div>
             <ProviderServicesPreview services={providerServices} />
+            <MatchedRequestsPreview rows={matchedRequests} />
             <RequestList
               rows={providerRequests}
-              emptyText="Aún no tienes solicitudes. Comparte tu perfil para recibir clientes."
+              emptyText="Aún no tienes solicitudes asignadas. Envía cotizaciones a las oportunidades abiertas."
             />
           </>
         ) : (
