@@ -27,8 +27,7 @@ export function Navbar() {
     },
     enabled: !!user,
   });
-  const userRole = profile?.role ?? user?.user_metadata?.role;
-  const showProviderLinks = userRole === "provider";
+  const showProviderLinks = !!user && profile?.role === "provider";
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
