@@ -98,9 +98,14 @@ function Dashboard() {
             </p>
           </div>
           {!isProvider && (
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link to="/become-provider">Ser prestador de servicios</Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild className="rounded-xl">
+                <Link to="/requests/new">+ Nueva solicitud</Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to="/become-provider">Ser prestador</Link>
+              </Button>
+            </div>
           )}
         </div>
 
@@ -119,12 +124,18 @@ function Dashboard() {
         ) : (
           <Tabs defaultValue="requests" className="w-full">
             <TabsList>
-              <TabsTrigger value="requests">Solicitudes</TabsTrigger>
+              <TabsTrigger value="requests">Mis solicitudes</TabsTrigger>
               <TabsTrigger value="favorites">Favoritos</TabsTrigger>
             </TabsList>
-            <TabsContent value="requests" className="mt-4">
-              <RequestList rows={clientRequests} emptyText="Aún no has solicitado ninguna cotización." />
+            <TabsContent value="requests" className="mt-4 space-y-3">
+              <div className="flex justify-end">
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/requests">Ver historial completo →</Link>
+                </Button>
+              </div>
+              <RequestList rows={clientRequests.slice(0, 6)} emptyText="Aún no has publicado solicitudes." />
             </TabsContent>
+
             <TabsContent value="favorites" className="mt-4">
               {favorites.length === 0 ? (
                 <EmptyBox text="Aún no tienes favoritos" />
