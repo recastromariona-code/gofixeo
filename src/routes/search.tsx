@@ -18,6 +18,9 @@ const searchSchema = z.object({
   q: z.string().optional(),
   category: z.string().optional(),
   tab: z.enum(["providers", "services", "requests"]).optional(),
+  city: z.string().optional(),
+  min: z.coerce.number().optional(),
+  max: z.coerce.number().optional(),
 });
 
 export const Route = createFileRoute("/search")({
