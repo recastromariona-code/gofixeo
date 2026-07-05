@@ -176,6 +176,7 @@ function ProviderProfile() {
               </div>
             </div>
             <div className="flex flex-col gap-2 md:min-w-[220px]">
+              {canRequestQuote && (
               <Dialog open={openQuote} onOpenChange={setOpenQuote}>
                 <DialogTrigger asChild>
                   <Button
