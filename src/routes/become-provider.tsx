@@ -52,6 +52,7 @@ function BecomeProvider() {
   const qc = useQueryClient();
 
   // Datos básicos
+  const [fullName, setFullName] = useState("");
   const [headline, setHeadline] = useState("");
   const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
@@ -100,7 +101,7 @@ function BecomeProvider() {
       if (!user) return null;
       const [prov, prof, cats, servs, ports] = await Promise.all([
         supabase.from("providers").select("*").eq("id", user.id).maybeSingle(),
-        supabase.from("profiles").select("phone, city").eq("id", user.id).maybeSingle(),
+        supabase.from("profiles").select("full_name, phone, city").eq("id", user.id).maybeSingle(),
         supabase.from("provider_categories").select("category_id").eq("provider_id", user.id),
         supabase.from("services").select("*").eq("provider_id", user.id),
         supabase.from("portfolio_items").select("*").eq("provider_id", user.id),
@@ -119,6 +120,7 @@ function BecomeProvider() {
         setGallery(prov.data.gallery_urls ?? []);
       }
       if (prof.data) {
+        setFullName(prof.data.full_name ?? "");
         setPhone(prof.data.phone ?? "");
         setCity(prof.data.city ?? "");
       }
@@ -210,7 +212,7 @@ function BecomeProvider() {
 
       const { error: pErr } = await supabase
         .from("profiles")
-        .update({ role: "provider", phone: phone || null, city: city || null })
+        .update({ role: "provider", full_name: fullName || null, phone: phone || null, city: city || null })
         .eq("id", user.id);
       if (pErr) throw pErr;
 
@@ -307,8 +309,14 @@ function BecomeProvider() {
         className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8 sm:px-6"
       >
         {/* Contacto */}
-        <Section title="Datos de contacto" icon={<Briefcase className="h-4 w-4" />}>
+        <Section title="Datos de cuenta y contacto" icon={<Briefcase className="h-4 w-4" />}>
           <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Nombre" className="sm:col-span-2">
+              <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Tu nombre completo" />
+            </Field>
+            <Field label="Correo" className="sm:col-span-2">
+              <Input value={user.email ?? ""} readOnly className="bg-muted/40" />
+            </Field>
             <Field label="Ciudad" required>
               <Input value={city} onChange={(e) => setCity(e.target.value)} required placeholder="Bogotá" />
             </Field>
