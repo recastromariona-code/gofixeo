@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Search as SearchIcon, Filter, MapPin, Clock, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useUserRole } from "@/hooks/use-user-role";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ProviderCard, type ProviderCardData } from "@/components/ProviderCard";
@@ -18,6 +19,9 @@ const searchSchema = z.object({
   q: z.string().optional(),
   category: z.string().optional(),
   tab: z.enum(["providers", "services", "requests"]).optional(),
+  city: z.string().optional(),
+  min: z.coerce.number().optional(),
+  max: z.coerce.number().optional(),
 });
 
 export const Route = createFileRoute("/search")({
@@ -32,10 +36,14 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchPage() {
-  const { q: initialQ, category, tab } = Route.useSearch();
+  const { q: initialQ, category, tab, city: cityParam, min, max } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isClient } = useUserRole();
   const [q, setQ] = useState(initialQ ?? "");
+  const [cityInput, setCityInput] = useState(cityParam ?? "");
+  const [minInput, setMinInput] = useState(min != null ? String(min) : "");
+  const [maxInput, setMaxInput] = useState(max != null ? String(max) : "");
   const activeTab = tab ?? "providers";
 
   const { data: categories = [] } = useQuery({
@@ -106,7 +114,7 @@ function SearchPage() {
 
   // ============= SERVICES =============
   const { data: services = [], isLoading: loadingServices } = useQuery({
-    queryKey: ["market-services", { q: initialQ, category: activeCategory?.id }],
+    queryKey: ["market-services", { q: initialQ, category: activeCategory?.id, city: cityParam, min, max }],
     enabled: activeTab === "services",
     queryFn: async () => {
       let query = supabase
@@ -114,13 +122,15 @@ function SearchPage() {
         .select(
           `id, title, description, starting_price, provider_id,
            categories!inner(name, slug),
-           providers!inner(id, rating, reviews_count, profiles!inner(full_name, city, avatar_url))`,
+           providers!inner(id, rating, reviews_count, service_areas, profiles!inner(full_name, city, avatar_url))`,
         )
         .eq("is_active", true)
         .order("starting_price", { ascending: true, nullsFirst: false })
         .limit(50);
 
       if (activeCategory) query = query.eq("category_id", activeCategory.id);
+      if (min != null) query = query.or(`starting_price.gte.${min},starting_price.is.null`);
+      if (max != null) query = query.or(`starting_price.lte.${max},starting_price.is.null`);
 
       const { data, error } = await query;
       if (error) throw error;
@@ -132,6 +142,14 @@ function SearchPage() {
             s.title.toLowerCase().includes(needle) ||
             (s.description ?? "").toLowerCase().includes(needle),
         );
+      }
+      if (cityParam) {
+        const needle = cityParam.toLowerCase();
+        rows = rows.filter((s) => {
+          const providerCity = (s.providers?.profiles?.city ?? "").toLowerCase();
+          const areas: string[] = (s.providers?.service_areas ?? []) as string[];
+          return providerCity.includes(needle) || areas.some((a) => (a ?? "").toLowerCase().includes(needle));
+        });
       }
       return rows;
     },
@@ -223,7 +241,7 @@ function SearchPage() {
             <div className="space-y-1">
               <Link
                 to="/search"
-                search={{ q: initialQ, tab: activeTab } as never}
+                search={{ q: initialQ, tab: activeTab, city: cityParam, min, max } as never}
                 className={`block rounded-lg px-3 py-2 text-sm ${!category ? "bg-brand-soft font-medium text-primary" : "hover:bg-muted"}`}
               >
                 Todas
@@ -232,7 +250,7 @@ function SearchPage() {
                 <Link
                   key={c.id}
                   to="/search"
-                  search={{ q: initialQ, category: c.slug, tab: activeTab } as never}
+                  search={{ q: initialQ, category: c.slug, tab: activeTab, city: cityParam, min, max } as never}
                   className={`block rounded-lg px-3 py-2 text-sm ${category === c.slug ? "bg-brand-soft font-medium text-primary" : "hover:bg-muted"}`}
                 >
                   {c.name}
@@ -240,6 +258,78 @@ function SearchPage() {
               ))}
             </div>
           </div>
+
+          {activeTab === "services" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                navigate({
+                  to: "/search",
+                  search: {
+                    q: initialQ,
+                    category,
+                    tab: activeTab,
+                    city: cityInput || undefined,
+                    min: minInput ? Number(minInput) : undefined,
+                    max: maxInput ? Number(maxInput) : undefined,
+                  } as never,
+                });
+              }}
+              className="mt-4 rounded-2xl border border-border bg-card p-4 shadow-soft"
+            >
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                <Filter className="h-4 w-4" /> Filtros
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Zona de cobertura</label>
+                  <Input
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    placeholder="Ciudad o zona"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Presupuesto</label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      min={0}
+                      value={minInput}
+                      onChange={(e) => setMinInput(e.target.value)}
+                      placeholder="Mín"
+                    />
+                    <Input
+                      type="number"
+                      min={0}
+                      value={maxInput}
+                      onChange={(e) => setMaxInput(e.target.value)}
+                      placeholder="Máx"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button type="submit" size="sm" className="flex-1 rounded-lg">Aplicar</Button>
+                  {(cityParam || min != null || max != null) && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-lg"
+                      onClick={() => {
+                        setCityInput("");
+                        setMinInput("");
+                        setMaxInput("");
+                        navigate({ to: "/search", search: { q: initialQ, category, tab: activeTab } as never });
+                      }}
+                    >
+                      Limpiar
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </form>
+          )}
         </aside>
 
         <div>
@@ -257,12 +347,21 @@ function SearchPage() {
               {loadingProviders ? (
                 <SkeletonGrid />
               ) : providers.length === 0 ? (
-                <EmptyState
-                  title="Aún no hay especialistas disponibles"
-                  desc="Sé el primer prestador de servicios en esta categoría."
-                  ctaLabel="Ofrecer mis servicios"
-                  to="/become-provider"
-                />
+                isClient ? (
+                  <EmptyState
+                    title="Aún no hay especialistas para esta búsqueda"
+                    desc="Prueba con otra categoría o publica una solicitud para recibir propuestas."
+                    ctaLabel="Publicar una solicitud"
+                    to="/requests/new"
+                  />
+                ) : (
+                  <EmptyState
+                    title="Aún no hay especialistas disponibles"
+                    desc="Sé el primer prestador de servicios en esta categoría."
+                    ctaLabel="Ofrecer mis servicios"
+                    to="/become-provider"
+                  />
+                )
               ) : (
                 <div className="grid gap-4">
                   {providers.map((p) => <ProviderCard key={p.id} provider={p} />)}
@@ -274,12 +373,21 @@ function SearchPage() {
               {loadingServices ? (
                 <SkeletonGrid />
               ) : services.length === 0 ? (
-                <EmptyState
-                  title="Aún no hay servicios publicados"
-                  desc="Publica tus servicios con precio de referencia para atraer clientes."
-                  ctaLabel="Publicar un servicio"
-                  to="/become-provider"
-                />
+                isClient ? (
+                  <EmptyState
+                    title="No encontramos servicios con esos filtros"
+                    desc="Ajusta la categoría, zona o presupuesto, o publica una solicitud para recibir cotizaciones."
+                    ctaLabel="Publicar una solicitud"
+                    to="/requests/new"
+                  />
+                ) : (
+                  <EmptyState
+                    title="Aún no hay servicios publicados"
+                    desc="Publica tus servicios con precio de referencia para atraer clientes."
+                    ctaLabel="Publicar un servicio"
+                    to="/become-provider"
+                  />
+                )
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2">
                   {services.map((s) => (
