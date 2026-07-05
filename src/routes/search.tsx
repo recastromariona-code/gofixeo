@@ -1,8 +1,8 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search as SearchIcon, Filter, X, MapPin, Clock, DollarSign } from "lucide-react";
+import { Search as SearchIcon, Filter, X, MapPin, Clock, DollarSign, LayoutGrid, List } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useUserRole } from "@/hooks/use-user-role";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/search")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Marketplace — FIXEO" },
+      { title: "Marketplace â€” FIXEO" },
       { name: "description", content: "Encuentra prestadores, servicios ofertados y solicitudes abiertas de trabajo." },
     ],
   }),
@@ -41,11 +41,9 @@ function SearchPage() {
   const { user } = useAuth();
   const { isClient, isProvider } = useUserRole();
   const [q, setQ] = useState(initialQ ?? "");
-  const [cityInput, setCityInput] = useState(cityParam ?? "");
-  const [minInput, setMinInput] = useState(min != null ? String(min) : "");
-  const [maxInput, setMaxInput] = useState(max != null ? String(max) : "");
+  const [providerView, setProviderView] = useState<"full" | "list">("full");
   // Providers only see client quote requests in "Oportunidades".
-  const activeTab = isProvider ? "requests" : (tab ?? "providers");
+  const activeTab = isProvider ? "requests" : (tab === "services" ? "providers" : (tab ?? "providers"));
 
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
@@ -113,49 +111,6 @@ function SearchPage() {
     },
   });
 
-  // ============= SERVICES =============
-  const { data: services = [], isLoading: loadingServices } = useQuery({
-    queryKey: ["market-services", { q: initialQ, category: activeCategory?.id, city: cityParam, min, max }],
-    enabled: activeTab === "services",
-    queryFn: async () => {
-      let query = supabase
-        .from("services")
-        .select(
-          `id, title, description, starting_price, provider_id,
-           categories!inner(name, slug),
-           providers!inner(id, rating, reviews_count, service_areas, profiles!inner(full_name, city, avatar_url))`,
-        )
-        .eq("is_active", true)
-        .order("starting_price", { ascending: true, nullsFirst: false })
-        .limit(50);
-
-      if (activeCategory) query = query.eq("category_id", activeCategory.id);
-      if (min != null) query = query.or(`starting_price.gte.${min},starting_price.is.null`);
-      if (max != null) query = query.or(`starting_price.lte.${max},starting_price.is.null`);
-
-      const { data, error } = await query;
-      if (error) throw error;
-      let rows = data ?? [];
-      if (initialQ) {
-        const needle = initialQ.toLowerCase();
-        rows = rows.filter(
-          (s) =>
-            s.title.toLowerCase().includes(needle) ||
-            (s.description ?? "").toLowerCase().includes(needle),
-        );
-      }
-      if (cityParam) {
-        const needle = cityParam.toLowerCase();
-        rows = rows.filter((s) => {
-          const providerCity = (s.providers?.profiles?.city ?? "").toLowerCase();
-          const areas: string[] = (s.providers?.service_areas ?? []) as string[];
-          return providerCity.includes(needle) || areas.some((a) => (a ?? "").toLowerCase().includes(needle));
-        });
-      }
-      return rows;
-    },
-  });
-
   // ============= OPEN REQUESTS =============
   const { data: requests = [], isLoading: loadingRequests } = useQuery({
     queryKey: ["market-requests", { q: initialQ, category: activeCategory?.id, uid: user?.id }],
@@ -192,18 +147,14 @@ function SearchPage() {
   });
 
   const heading =
-    activeTab === "services"
-      ? activeCategory ? `Servicios de ${activeCategory.name.toLowerCase()}` : "Servicios ofertados"
-      : activeTab === "requests"
-        ? activeCategory ? `Solicitudes de ${activeCategory.name.toLowerCase()}` : "Solicitudes abiertas"
-        : activeCategory ? activeCategory.name : "Buscar técnicos y oficios";
+    activeTab === "requests"
+      ? activeCategory ? `Solicitudes de ${activeCategory.name.toLowerCase()}` : "Solicitudes abiertas"
+      : activeCategory ? activeCategory.name : "Buscar tÃ©cnicos y oficios";
 
   const subheading =
-    activeTab === "services"
-      ? "Explora servicios publicados por prestadores con precio de referencia."
-      : activeTab === "requests"
-        ? "Trabajos que compradores están buscando ahora mismo. Envía tu cotización."
-        : "Encuentra especialistas del hogar cerca de ti";
+    activeTab === "requests"
+      ? "Trabajos que compradores estÃ¡n buscando ahora mismo. EnvÃ­a tu cotizaciÃ³n."
+      : "Encuentra especialistas del hogar cerca de ti";
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -224,7 +175,7 @@ function SearchPage() {
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Ej: electricista, aire acondicionado, San Salvador…"
+                placeholder="Ej: electricista, aire acondicionado, San Salvadorâ€¦"
                 className="border-0 bg-transparent shadow-none focus-visible:ring-0"
               />
             </div>
@@ -265,7 +216,7 @@ function SearchPage() {
         <aside className="hidden lg:block">
           <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
             <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-              <Filter className="h-4 w-4" /> Categorías
+              <Filter className="h-4 w-4" /> CategorÃ­as
             </div>
             <div className="space-y-1">
               <Link
@@ -288,77 +239,6 @@ function SearchPage() {
             </div>
           </div>
 
-          {activeTab === "services" && (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                navigate({
-                  to: "/search",
-                  search: {
-                    q: initialQ,
-                    category,
-                    tab: activeTab,
-                    city: cityInput || undefined,
-                    min: minInput ? Number(minInput) : undefined,
-                    max: maxInput ? Number(maxInput) : undefined,
-                  } as never,
-                });
-              }}
-              className="mt-4 rounded-2xl border border-border bg-card p-4 shadow-soft"
-            >
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <Filter className="h-4 w-4" /> Filtros
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Zona de cobertura</label>
-                  <Input
-                    value={cityInput}
-                    onChange={(e) => setCityInput(e.target.value)}
-                    placeholder="Ciudad o zona"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Presupuesto</label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      min={0}
-                      value={minInput}
-                      onChange={(e) => setMinInput(e.target.value)}
-                      placeholder="Mín"
-                    />
-                    <Input
-                      type="number"
-                      min={0}
-                      value={maxInput}
-                      onChange={(e) => setMaxInput(e.target.value)}
-                      placeholder="Máx"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button type="submit" size="sm" className="flex-1 rounded-lg">Aplicar</Button>
-                  {(cityParam || min != null || max != null) && (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="rounded-lg"
-                      onClick={() => {
-                        setCityInput("");
-                        setMinInput("");
-                        setMaxInput("");
-                        navigate({ to: "/search", search: { q: initialQ, category, tab: activeTab } as never });
-                      }}
-                    >
-                      Limpiar
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </form>
-          )}
         </aside>
 
         <div>
@@ -367,11 +247,42 @@ function SearchPage() {
             onValueChange={(v) => navigate({ to: "/search", search: { q: initialQ, category, tab: v } as never })}
           >
             {!isProvider && (
-              <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
-                <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
-                <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
-                <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
-              </TabsList>
+              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <TabsList className="grid min-h-11 flex-1 grid-cols-2 rounded-xl">
+                  <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
+                  <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
+                </TabsList>
+                {activeTab === "providers" && (
+                  <div className="flex w-fit rounded-xl border border-border bg-card p-1 shadow-soft">
+                    <button
+                      type="button"
+                      onClick={() => setProviderView("full")}
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition ${
+                        providerView === "full"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                      aria-label="Vista completa"
+                      title="Vista completa"
+                    >
+                      <LayoutGrid className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setProviderView("list")}
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition ${
+                        providerView === "list"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                      aria-label="Vista de lista"
+                      title="Vista de lista"
+                    >
+                      <List className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             <TabsContent value="providers">
@@ -398,85 +309,34 @@ function SearchPage() {
               ) : providers.length === 0 ? (
                 isClient ? (
                   <EmptyState
-                    title="Aún no hay especialistas para esta búsqueda"
-                    desc="Prueba con otra categoría o publica una solicitud para recibir propuestas."
+                    title="AÃºn no hay especialistas para esta bÃºsqueda"
+                    desc="Prueba con otra categorÃ­a o publica una solicitud para recibir propuestas."
                     ctaLabel="Publicar una solicitud"
                     to="/requests/new"
                   />
                 ) : (
                   <EmptyState
-                    title="Aún no hay especialistas disponibles"
-                    desc="Sé el primero en ofrecer tus servicios en esta categoría."
+                    title="AÃºn no hay especialistas disponibles"
+                    desc="SÃ© el primero en ofrecer tus servicios en esta categorÃ­a."
                     ctaLabel="Ofrecer mis servicios"
                     to="/become-provider"
                   />
                 )
               ) : (
                 <div className="grid gap-4">
-                  {providers.map((p) => <ProviderCard key={p.id} provider={p} />)}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="services">
-              {loadingServices ? (
-                <SkeletonGrid />
-              ) : services.length === 0 ? (
-                isClient ? (
-                  <EmptyState
-                    title="No encontramos servicios con esos filtros"
-                    desc="Ajusta la categoría, zona o presupuesto, o publica una solicitud para recibir cotizaciones."
-                    ctaLabel="Publicar una solicitud"
-                    to="/requests/new"
-                  />
-                ) : (
-                  <EmptyState
-                    title="Aún no hay servicios publicados"
-                    desc="Publica tus servicios con precio de referencia para atraer clientes."
-                    ctaLabel="Publicar un servicio"
-                    to="/become-provider"
-                  />
-                )
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {services.map((s) => (
-                    <Link
-                      key={s.id}
-                      to="/provider/$providerId"
-                      params={{ providerId: s.provider_id }}
-                      className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <Badge variant="secondary" className="rounded-lg text-xs">{s.categories?.name}</Badge>
-                          <h3 className="mt-2 font-semibold group-hover:text-primary">{s.title}</h3>
-                        </div>
-                        {s.starting_price != null && (
-                          <div className="text-right">
-                            <div className="text-xs text-muted-foreground">Desde</div>
-                            <div className="font-bold text-primary">${Number(s.starting_price).toLocaleString()}</div>
-                          </div>
-                        )}
-                      </div>
-                      {s.description && (
-                        <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>
-                      )}
-                      <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-xs text-muted-foreground">
-                        <span>{s.providers?.profiles?.full_name ?? "Prestador"}</span>
-                        <span>⭐ {Number(s.providers?.rating ?? 0).toFixed(1)} ({s.providers?.reviews_count ?? 0})</span>
-                      </div>
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1 scale-x-0 bg-gradient-to-r from-primary to-primary-glow transition group-hover:scale-x-100" />
-                    </Link>
+                  {providers.map((p) => (
+                    <ProviderCard key={p.id} provider={p} view={providerView} />
                   ))}
                 </div>
               )}
             </TabsContent>
 
+
             <TabsContent value="requests">
               {!user ? (
                 <EmptyState
-                  title="Inicia sesión para ver oportunidades"
-                  desc="Las solicitudes abiertas están disponibles para prestadores registrados."
+                  title="Inicia sesiÃ³n para ver oportunidades"
+                  desc="Las solicitudes abiertas estÃ¡n disponibles para prestadores registrados."
                   ctaLabel="Ingresar"
                   to="/auth"
                 />
@@ -485,7 +345,7 @@ function SearchPage() {
               ) : requests.length === 0 ? (
                 <EmptyState
                   title="No hay solicitudes abiertas por ahora"
-                  desc={activeCategory ? "Prueba con otra categoría o vuelve más tarde." : "Cambia el filtro o vuelve más tarde."}
+                  desc={activeCategory ? "Prueba con otra categorÃ­a o vuelve mÃ¡s tarde." : "Cambia el filtro o vuelve mÃ¡s tarde."}
                   ctaLabel={isProvider ? "Ver mi perfil" : "Publicar una solicitud"}
                   to={isProvider ? "/dashboard" : "/requests/new"}
                 />
@@ -520,7 +380,7 @@ function SearchPage() {
                               <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{r.description}</p>
                             )}
                           </div>
-                          <Badge variant="outline" className="rounded-lg">{quoteCount} cotización{quoteCount === 1 ? "" : "es"}</Badge>
+                          <Badge variant="outline" className="rounded-lg">{quoteCount} cotizaciÃ³n{quoteCount === 1 ? "" : "es"}</Badge>
                         </div>
                         <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
                           {r.city && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {r.city}</span>}
@@ -528,7 +388,7 @@ function SearchPage() {
                           {(r.budget_min || r.budget_max) && (
                             <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />
                               {r.budget_min && r.budget_max
-                                ? `$${Number(r.budget_min).toLocaleString()} – $${Number(r.budget_max).toLocaleString()}`
+                                ? `$${Number(r.budget_min).toLocaleString()} â€“ $${Number(r.budget_max).toLocaleString()}`
                                 : `$${Number(r.budget_min ?? r.budget_max).toLocaleString()}`}
                             </span>
                           )}

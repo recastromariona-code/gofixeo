@@ -15,26 +15,32 @@ export type ProviderCardData = {
   categories?: { name: string }[];
 };
 
+type ProviderCardView = "full" | "list";
+
 export function ProviderCard({
   provider,
   className,
+  view = "full",
 }: {
   provider: ProviderCardData;
   className?: string;
+  view?: ProviderCardView;
 }) {
   const initials = (provider.full_name ?? "P").slice(0, 2).toUpperCase();
   const rating = Number(provider.rating ?? 0);
+  const compact = view === "list";
 
   return (
     <Link
       to="/provider/$providerId"
       params={{ providerId: provider.id }}
       className={cn(
-        "group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated sm:flex-row sm:items-start",
+        "group relative flex gap-4 overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated",
+        compact ? "items-center p-4" : "flex-col p-5 sm:flex-row sm:items-start",
         className,
       )}
     >
-      <div className="relative shrink-0 self-start">
+      {!compact && <div className="relative shrink-0 self-start">
         <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-primary-glow/10 p-0.5 transition group-hover:from-primary/25 group-hover:to-primary-glow/25">
           <Avatar className="h-[4.5rem] w-[4.5rem] rounded-[calc(1rem-2px)] border border-border/80 bg-card">
             <AvatarImage src={provider.avatar_url ?? undefined} alt={provider.full_name ?? ""} />
@@ -48,7 +54,7 @@ export function ProviderCard({
             <BadgeCheck className="h-3.5 w-3.5" />
           </span>
         )}
-      </div>
+      </div>}
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3">
@@ -73,11 +79,11 @@ export function ProviderCard({
           <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition group-hover:opacity-100 group-hover:text-primary" />
         </div>
 
-        {provider.bio && (
+        {!compact && provider.bio && (
           <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{provider.bio}</p>
         )}
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        {!compact && <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           {provider.categories && provider.categories.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {provider.categories.slice(0, 3).map((c) => (
@@ -95,7 +101,7 @@ export function ProviderCard({
           <span className="text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
             Ver perfil →
           </span>
-        </div>
+        </div>}
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1 scale-x-0 bg-gradient-to-r from-primary to-primary-glow transition group-hover:scale-x-100" />
