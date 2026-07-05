@@ -39,12 +39,13 @@ function SearchPage() {
   const { q: initialQ, category, tab, city: cityParam, min, max } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isClient } = useUserRole();
+  const { isClient, isProvider } = useUserRole();
   const [q, setQ] = useState(initialQ ?? "");
   const [cityInput, setCityInput] = useState(cityParam ?? "");
   const [minInput, setMinInput] = useState(min != null ? String(min) : "");
   const [maxInput, setMaxInput] = useState(max != null ? String(max) : "");
-  const activeTab = tab ?? "providers";
+  // Providers only see client quote requests in "Oportunidades".
+  const activeTab = isProvider ? "requests" : (tab ?? "providers");
 
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
@@ -365,11 +366,13 @@ function SearchPage() {
             value={activeTab}
             onValueChange={(v) => navigate({ to: "/search", search: { q: initialQ, category, tab: v } as never })}
           >
-            <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
-              <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
-              <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
-              <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
-            </TabsList>
+            {!isProvider && (
+              <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
+                <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
+                <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
+                <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
+              </TabsList>
+            )}
 
             <TabsContent value="providers">
               {!loadingProviders && providers.length > 0 && (
@@ -483,9 +486,10 @@ function SearchPage() {
                 <EmptyState
                   title="No hay solicitudes abiertas por ahora"
                   desc={activeCategory ? "Prueba con otra categoría o vuelve más tarde." : "Cambia el filtro o vuelve más tarde."}
-                  ctaLabel="Publicar una solicitud"
-                  to="/requests/new"
+                  ctaLabel={isProvider ? "Ver mi perfil" : "Publicar una solicitud"}
+                  to={isProvider ? "/dashboard" : "/requests/new"}
                 />
+
               ) : (
                 <div className="grid gap-4">
                   {requests.map((r) => {
