@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Briefcase,
+  FileText,
   Home,
   LayoutDashboard,
   LogOut,
@@ -12,6 +15,7 @@ import {
   User as UserIcon,
   Wrench,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/hooks/use-theme";
 import { FixeoLogo } from "@/components/FixeoLogo";
@@ -31,18 +35,28 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const guestNavItems = [
+type NavItem = { label: string; to: string; icon: typeof Home; exact: boolean };
+
+const guestNavItems: readonly NavItem[] = [
   { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
   { label: "Ofrecer mis servicios", to: "/become-provider", icon: Wrench, exact: false },
-] as const;
+];
 
-const userNavItems = [
+const buyerNavItems: readonly NavItem[] = [
   { label: "Inicio", to: "/", icon: Home, exact: true },
-  { label: "Perfil", to: "/become-provider", icon: UserIcon, exact: false },
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
-] as const;
+  { label: "Mis solicitudes", to: "/requests", icon: FileText, exact: false },
+  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
+  { label: "Perfil", to: "/profile", icon: UserIcon, exact: false },
+];
+
+const providerNavItems: readonly NavItem[] = [
+  { label: "Inicio", to: "/", icon: Home, exact: true },
+  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
+  { label: "Oportunidades", to: "/search", icon: Briefcase, exact: false },
+  { label: "Mi perfil profesional", to: "/become-provider", icon: Wrench, exact: false },
+];
 
 function isNavActive(pathname: string, to: string, exact: boolean) {
   if (exact) return pathname === to;
