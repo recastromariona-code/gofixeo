@@ -39,7 +39,7 @@ function Dashboard() {
       if (!user) return [];
       const { data } = await supabase
         .from("quote_requests")
-        .select(`id, description, status, created_at, provider:providers!inner(profiles!inner(full_name, avatar_url))`)
+        .select(`id, description, status, created_at, provider:providers(profiles(full_name, avatar_url))`)
         .eq("client_id", user.id)
         .order("created_at", { ascending: false });
       return data ?? [];
@@ -98,9 +98,14 @@ function Dashboard() {
             </p>
           </div>
           {!isProvider && (
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link to="/become-provider">Ser prestador de servicios</Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild className="rounded-xl">
+                <Link to="/requests/new">+ Nueva solicitud</Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to="/become-provider">Ser prestador</Link>
+              </Button>
+            </div>
           )}
         </div>
 
@@ -119,12 +124,18 @@ function Dashboard() {
         ) : (
           <Tabs defaultValue="requests" className="w-full">
             <TabsList>
-              <TabsTrigger value="requests">Solicitudes</TabsTrigger>
+              <TabsTrigger value="requests">Mis solicitudes</TabsTrigger>
               <TabsTrigger value="favorites">Favoritos</TabsTrigger>
             </TabsList>
-            <TabsContent value="requests" className="mt-4">
-              <RequestList rows={clientRequests} emptyText="Aún no has solicitado ninguna cotización." />
+            <TabsContent value="requests" className="mt-4 space-y-3">
+              <div className="flex justify-end">
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/requests">Ver historial completo →</Link>
+                </Button>
+              </div>
+              <RequestList rows={clientRequests.slice(0, 6)} emptyText="Aún no has publicado solicitudes." />
             </TabsContent>
+
             <TabsContent value="favorites" className="mt-4">
               {favorites.length === 0 ? (
                 <EmptyBox text="Aún no tienes favoritos" />
@@ -195,7 +206,7 @@ function RequestList({ rows, emptyText }: { rows: RequestRow[]; emptyText: strin
         return (
           <Link
             key={r.id}
-            to="/chat/$requestId"
+            to="/requests/$requestId"
             params={{ requestId: r.id }}
             className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:border-primary/40"
           >
