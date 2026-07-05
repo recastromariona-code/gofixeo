@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/search")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Marketplace â€” FIXEO" },
+      { title: "Marketplace — FIXEO" },
       { name: "description", content: "Encuentra prestadores, servicios ofertados y solicitudes abiertas de trabajo." },
     ],
   }),
@@ -149,11 +149,11 @@ function SearchPage() {
   const heading =
     activeTab === "requests"
       ? activeCategory ? `Solicitudes de ${activeCategory.name.toLowerCase()}` : "Solicitudes abiertas"
-      : activeCategory ? activeCategory.name : "Buscar tÃ©cnicos y oficios";
+      : activeCategory ? activeCategory.name : "Buscar técnicos y oficios";
 
   const subheading =
     activeTab === "requests"
-      ? "Trabajos que compradores estÃ¡n buscando ahora mismo. EnvÃ­a tu cotizaciÃ³n."
+      ? "Trabajos que compradores están buscando ahora mismo. Envía tu cotización."
       : "Encuentra especialistas del hogar cerca de ti";
 
   return (
@@ -175,7 +175,7 @@ function SearchPage() {
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Ej: electricista, aire acondicionado, San Salvadorâ€¦"
+                placeholder="Ej: electricista, aire acondicionado, San Salvador…"
                 className="border-0 bg-transparent shadow-none focus-visible:ring-0"
               />
             </div>
@@ -216,7 +216,7 @@ function SearchPage() {
         <aside className="hidden lg:block">
           <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
             <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-              <Filter className="h-4 w-4" /> CategorÃ­as
+              <Filter className="h-4 w-4" /> Categorías
             </div>
             <div className="space-y-1">
               <Link
@@ -309,15 +309,15 @@ function SearchPage() {
               ) : providers.length === 0 ? (
                 isClient ? (
                   <EmptyState
-                    title="AÃºn no hay especialistas para esta bÃºsqueda"
-                    desc="Prueba con otra categorÃ­a o publica una solicitud para recibir propuestas."
+                    title="Aún no hay especialistas para esta búsqueda"
+                    desc="Prueba con otra categoría o publica una solicitud para recibir propuestas."
                     ctaLabel="Publicar una solicitud"
                     to="/requests/new"
                   />
                 ) : (
                   <EmptyState
-                    title="AÃºn no hay especialistas disponibles"
-                    desc="SÃ© el primero en ofrecer tus servicios en esta categorÃ­a."
+                    title="Aún no hay especialistas disponibles"
+                    desc="Sé el primero en ofrecer tus servicios en esta categoría."
                     ctaLabel="Ofrecer mis servicios"
                     to="/become-provider"
                   />
@@ -335,8 +335,8 @@ function SearchPage() {
             <TabsContent value="requests">
               {!user ? (
                 <EmptyState
-                  title="Inicia sesiÃ³n para ver oportunidades"
-                  desc="Las solicitudes abiertas estÃ¡n disponibles para prestadores registrados."
+                  title="Inicia sesión para ver oportunidades"
+                  desc="Las solicitudes abiertas están disponibles para prestadores registrados."
                   ctaLabel="Ingresar"
                   to="/auth"
                 />
@@ -345,7 +345,7 @@ function SearchPage() {
               ) : requests.length === 0 ? (
                 <EmptyState
                   title="No hay solicitudes abiertas por ahora"
-                  desc={activeCategory ? "Prueba con otra categorÃ­a o vuelve mÃ¡s tarde." : "Cambia el filtro o vuelve mÃ¡s tarde."}
+                  desc={activeCategory ? "Prueba con otra categoría o vuelve más tarde." : "Cambia el filtro o vuelve más tarde."}
                   ctaLabel={isProvider ? "Ver mi perfil" : "Publicar una solicitud"}
                   to={isProvider ? "/dashboard" : "/requests/new"}
                 />
@@ -380,7 +380,7 @@ function SearchPage() {
                               <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{r.description}</p>
                             )}
                           </div>
-                          <Badge variant="outline" className="rounded-lg">{quoteCount} cotizaciÃ³n{quoteCount === 1 ? "" : "es"}</Badge>
+                          <Badge variant="outline" className="rounded-lg">{quoteCount} cotización{quoteCount === 1 ? "" : "es"}</Badge>
                         </div>
                         <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
                           {r.city && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {r.city}</span>}
@@ -388,7 +388,7 @@ function SearchPage() {
                           {(r.budget_min || r.budget_max) && (
                             <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />
                               {r.budget_min && r.budget_max
-                                ? `$${Number(r.budget_min).toLocaleString()} â€“ $${Number(r.budget_max).toLocaleString()}`
+                                ? `$${Number(r.budget_min).toLocaleString()} – $${Number(r.budget_max).toLocaleString()}`
                                 : `$${Number(r.budget_min ?? r.budget_max).toLocaleString()}`}
                             </span>
                           )}

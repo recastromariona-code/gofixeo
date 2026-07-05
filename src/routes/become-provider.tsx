@@ -294,12 +294,13 @@ function BecomeProvider() {
             <div>
               <h1 className="text-2xl font-bold">Perfil de prestador de servicios</h1>
               <p className="text-sm text-muted-foreground">
-                Construye un perfil completo para que los clientes te encuentren y confíen en tu trabajo.
+                Solo pedimos lo esencial para publicar tu perfil. Puedes ampliar los detalles cuando quieras.
               </p>
             </div>
           </div>
         </div>
       </section>
+
 
       <form
         onSubmit={(e) => {
@@ -400,8 +401,19 @@ function BecomeProvider() {
           </div>
         </Section>
 
+        <details className="group rounded-2xl border border-dashed border-border bg-muted/20 open:bg-transparent">
+          <summary className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl px-5 py-4 text-sm font-semibold text-foreground hover:bg-muted/40">
+            <span className="inline-flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Detalles opcionales (etiquetas, precios, servicios, galería, portafolio)
+            </span>
+            <span className="text-xs font-normal text-muted-foreground group-open:hidden">Mostrar</span>
+            <span className="hidden text-xs font-normal text-muted-foreground group-open:inline">Ocultar</span>
+          </summary>
+          <div className="space-y-6 p-5 pt-0">
         {/* Etiquetas y especialidades */}
         <Section title="Etiquetas y especialidades" icon={<Tag className="h-4 w-4" />}>
+
           <div className="space-y-5">
             <div>
               <Label>Etiquetas (palabras clave)</Label>
@@ -740,8 +752,11 @@ function BecomeProvider() {
             </Button>
           </div>
         </Section>
+          </div>
+        </details>
 
         <div className="flex justify-end gap-3">
+
           <Button type="button" variant="outline" onClick={() => navigate({ to: "/dashboard" })}>
             Cancelar
           </Button>
