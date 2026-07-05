@@ -16,6 +16,7 @@ import { Footer } from "@/components/Footer";
 import { CategoryCard, type CategoryCardData } from "@/components/CategoryCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TrustSpecialistsBar } from "@/components/TrustSpecialistsBar";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useState } from "react";
 
