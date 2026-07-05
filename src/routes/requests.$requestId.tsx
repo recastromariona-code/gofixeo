@@ -65,6 +65,45 @@ function RequestDetail() {
   });
 
   const isOwner = user?.id === req?.client_id;
+  const isProviderView = !!user && !!req && !isOwner && isProvider;
+
+  const { data: myQuote, refetch: refetchMyQuote } = useQuery({
+    queryKey: ["my-quote", requestId, user?.id],
+    enabled: !!user && !!req && isProviderView,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quotes")
+        .select("id, amount, notes, estimated_days, created_at")
+        .eq("request_id", requestId)
+        .eq("provider_id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const sendQuoteMut = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Sin sesión");
+      const amt = Number(quoteAmount);
+      if (!amt || amt <= 0) throw new Error("Ingresa un monto válido");
+      if (!quoteNotes.trim()) throw new Error("Escribe un mensaje para el cliente");
+      const { error } = await supabase.from("quotes").insert({
+        request_id: requestId,
+        provider_id: user.id,
+        amount: amt,
+        notes: quoteNotes.trim(),
+        estimated_days: quoteDays ? Number(quoteDays) : null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("¡Cotización enviada! El cliente será notificado.");
+      setQuoteAmount(""); setQuoteNotes(""); setQuoteDays("");
+      refetchMyQuote();
+      qc.invalidateQueries({ queryKey: ["request-detail", requestId] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
+  });
 
   const { data: quotes = [] } = useQuery({
     queryKey: ["request-quotes", requestId],
