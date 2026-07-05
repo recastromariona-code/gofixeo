@@ -206,7 +206,7 @@ function RequestList({ rows, emptyText }: { rows: RequestRow[]; emptyText: strin
         return (
           <Link
             key={r.id}
-            to="/chat/$requestId"
+            to="/requests/$requestId"
             params={{ requestId: r.id }}
             className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:border-primary/40"
           >
