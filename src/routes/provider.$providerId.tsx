@@ -24,6 +24,8 @@ export const Route = createFileRoute("/provider/$providerId")({
 function ProviderProfile() {
   const { providerId } = Route.useParams();
   const { user } = useAuth();
+  const { isProvider, isGuest } = useUserRole();
+  const canRequestQuote = isGuest || !isProvider;
   const navigate = useNavigate();
   const qc = useQueryClient();
 
