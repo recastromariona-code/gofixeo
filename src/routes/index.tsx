@@ -4,13 +4,11 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
-  Clock3,
   MessageCircle,
   Search,
   ShieldCheck,
   Sparkles,
   Star,
-  Users,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
@@ -23,12 +21,6 @@ import { useState } from "react";
 export const Route = createFileRoute("/")({
   component: Landing,
 });
-
-const TRUST_STATS = [
-  { icon: Users, value: "+500", label: "Prestadores verificados" },
-  { icon: Star, value: "4.8", label: "Valoración media" },
-  { icon: Clock3, value: "< 2 h", label: "Primera respuesta" },
-] as const;
 
 const TRUST_PILLARS = [
   {
@@ -173,7 +165,7 @@ function Landing() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild variant="outline" size="lg" className="rounded-xl bg-card/60">
-                  <Link to="/become-provider">Quiero ser prestador</Link>
+                  <Link to="/become-provider">Quiero ofrecer mis servicios</Link>
                 </Button>
               </div>
             </motion.div>
@@ -207,19 +199,6 @@ function Landing() {
                     </div>
                   ))}
                 </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {TRUST_STATS.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-2xl border border-border/70 bg-card/80 px-3 py-4 text-center shadow-soft backdrop-blur"
-                  >
-                    <stat.icon className="mx-auto h-4 w-4 text-primary" />
-                    <p className="mt-2 text-lg font-bold text-foreground">{stat.value}</p>
-                    <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground">{stat.label}</p>
-                  </div>
-                ))}
               </div>
             </motion.div>
           </div>
@@ -340,12 +319,12 @@ function Landing() {
         </div>
       </section>
 
-      {/* CTA prestadores */}
+      {/* CTA ofrecer servicios */}
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-brand p-8 shadow-elevated md:p-14">
           <div className="relative z-10 max-w-2xl text-primary-foreground">
             <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground/90">
-              Para prestadores
+              Ofrecer servicios
             </span>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl">¿Eres técnico o dominas un oficio?</h2>
             <p className="mt-3 text-base leading-relaxed text-primary-foreground/90">
@@ -353,7 +332,7 @@ function Landing() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="secondary" className="rounded-xl">
-                <Link to="/become-provider">Registrarme como prestador</Link>
+                <Link to="/become-provider">Ofrecer mis servicios</Link>
               </Button>
               <Button
                 asChild
