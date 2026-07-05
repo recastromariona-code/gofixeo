@@ -17,6 +17,8 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ status, limit }, ctx) => {
     if (!ctx.isAuthenticated()) return errorResult("No autenticado.");
+    const userId = ctx.getUserId();
+    if (!userId) return errorResult("No pudimos identificar tu usuario.");
     const sb = supabaseForUser(ctx);
     let q = sb
       .from("quote_requests")
@@ -26,7 +28,7 @@ export default defineTool({
          categories(name, slug),
          quotes(count)`,
       )
-      .eq("client_id", ctx.getUserId())
+      .eq("client_id", userId)
       .order("created_at", { ascending: false })
       .limit(limit ?? 20);
     if (status) q = q.eq("status", status);

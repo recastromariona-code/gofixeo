@@ -21,6 +21,8 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
   handler: async (input, ctx) => {
     if (!ctx.isAuthenticated()) return errorResult("Debes estar autenticado para crear una solicitud.");
+    const userId = ctx.getUserId();
+    if (!userId) return errorResult("No pudimos identificar tu usuario.");
     const sb = supabaseForUser(ctx);
 
     const { data: cat, error: catErr } = await sb
@@ -34,7 +36,7 @@ export default defineTool({
     const { data, error } = await sb
       .from("quote_requests")
       .insert({
-        client_id: ctx.getUserId(),
+        client_id: userId,
         category_id: cat.id,
         title: input.title,
         description: input.description,
