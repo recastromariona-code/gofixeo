@@ -121,6 +121,17 @@ function NewRequestPage() {
         .select("id")
         .single();
       if (error) throw error;
+      const cat = categories.find((c) => c.id === categoryId);
+      // Fire-and-forget: notifica a n8n para avisar por WhatsApp a los proveedores.
+      notify({
+        data: {
+          request_id: data.id as string,
+          title: title.trim(),
+          category: cat?.slug ?? "",
+          city: city.trim(),
+          urgency,
+        },
+      }).catch(() => {});
       return data.id as string;
     },
     onSuccess: (id) => {
