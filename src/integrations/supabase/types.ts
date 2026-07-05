@@ -296,42 +296,73 @@ export type Database = {
       }
       quote_requests: {
         Row: {
+          accepted_quote_id: string | null
           address: string | null
+          budget_max: number | null
+          budget_min: number | null
           category_id: string | null
+          city: string | null
           client_id: string
           created_at: string
           description: string
           id: string
+          photos: string[]
           preferred_date: string | null
-          provider_id: string
+          preferred_time: string | null
+          provider_id: string | null
           status: Database["public"]["Enums"]["request_status"]
+          title: string | null
           updated_at: string
+          urgency: string
         }
         Insert: {
+          accepted_quote_id?: string | null
           address?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
           category_id?: string | null
+          city?: string | null
           client_id: string
           created_at?: string
           description: string
           id?: string
+          photos?: string[]
           preferred_date?: string | null
-          provider_id: string
+          preferred_time?: string | null
+          provider_id?: string | null
           status?: Database["public"]["Enums"]["request_status"]
+          title?: string | null
           updated_at?: string
+          urgency?: string
         }
         Update: {
+          accepted_quote_id?: string | null
           address?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
           category_id?: string | null
+          city?: string | null
           client_id?: string
           created_at?: string
           description?: string
           id?: string
+          photos?: string[]
           preferred_date?: string | null
-          provider_id?: string
+          preferred_time?: string | null
+          provider_id?: string | null
           status?: Database["public"]["Enums"]["request_status"]
+          title?: string | null
           updated_at?: string
+          urgency?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "quote_requests_accepted_quote_id_fkey"
+            columns: ["accepted_quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quote_requests_category_id_fkey"
             columns: ["category_id"]
