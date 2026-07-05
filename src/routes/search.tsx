@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search as SearchIcon, Filter } from "lucide-react";
+import { Search as SearchIcon, Filter, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -122,6 +122,34 @@ function SearchPage() {
             </div>
             <Button type="submit" className="gradient-brand rounded-xl">Buscar</Button>
           </form>
+
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
+            <Link
+              to="/search"
+              search={{ q: initialQ } as never}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                !category
+                  ? "bg-brand-soft text-primary"
+                  : "border border-border bg-card text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Todas
+            </Link>
+            {categories.map((c) => (
+              <Link
+                key={c.id}
+                to="/search"
+                search={{ q: initialQ, category: c.slug } as never}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  category === c.slug
+                    ? "bg-brand-soft text-primary"
+                    : "border border-border bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -154,6 +182,25 @@ function SearchPage() {
         </aside>
 
         <div>
+          {!isLoading && providers.length > 0 && (
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">{providers.length}</span>{" "}
+                {providers.length === 1 ? "especialista encontrado" : "especialistas encontrados"}
+              </p>
+              {activeCategory && (
+                <Link
+                  to="/search"
+                  search={{ q: initialQ } as never}
+                  className="inline-flex items-center gap-1 rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-primary"
+                >
+                  {activeCategory.name}
+                  <X className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
+          )}
+
           {isLoading ? (
             <div className="grid gap-4">
               {[...Array(4)].map((_, i) => (
@@ -164,7 +211,7 @@ function SearchPage() {
             <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
               <h3 className="text-lg font-semibold">Aún no hay especialistas disponibles</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sé el primer prestador de servicios en esta categoría.
+                Sé el primero en ofrecer tus servicios en esta categoría.
               </p>
               <Button asChild className="mt-4 gradient-brand rounded-xl">
                 <Link to="/become-provider">Ofrecer mis servicios</Link>
