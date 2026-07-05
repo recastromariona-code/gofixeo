@@ -11,9 +11,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, MapPin, Calendar, Clock, DollarSign, Zap, MessageSquare, CheckCircle2, Star,
-  ShieldCheck, Award, XCircle, Loader2,
+  ShieldCheck, Award, XCircle, Loader2, Send,
 } from "lucide-react";
 
 export const Route = createFileRoute("/requests/$requestId")({
@@ -34,6 +35,19 @@ function RequestDetail() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [quoteAmount, setQuoteAmount] = useState("");
+  const [quoteNotes, setQuoteNotes] = useState("");
+  const [quoteDays, setQuoteDays] = useState("");
+
+  const { data: myProfile } = useQuery({
+    queryKey: ["my-role", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).maybeSingle();
+      return data;
+    },
+  });
+  const isProvider = myProfile?.role === "provider";
 
   const { data: req, isLoading } = useQuery({
     queryKey: ["request-detail", requestId],
@@ -51,6 +65,45 @@ function RequestDetail() {
   });
 
   const isOwner = user?.id === req?.client_id;
+  const isProviderView = !!user && !!req && !isOwner && isProvider;
+
+  const { data: myQuote, refetch: refetchMyQuote } = useQuery({
+    queryKey: ["my-quote", requestId, user?.id],
+    enabled: !!user && !!req && isProviderView,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quotes")
+        .select("id, amount, notes, estimated_days, created_at")
+        .eq("request_id", requestId)
+        .eq("provider_id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const sendQuoteMut = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Sin sesión");
+      const amt = Number(quoteAmount);
+      if (!amt || amt <= 0) throw new Error("Ingresa un monto válido");
+      if (!quoteNotes.trim()) throw new Error("Escribe un mensaje para el cliente");
+      const { error } = await supabase.from("quotes").insert({
+        request_id: requestId,
+        provider_id: user.id,
+        amount: amt,
+        notes: quoteNotes.trim(),
+        estimated_days: quoteDays ? Number(quoteDays) : null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("¡Cotización enviada! El cliente será notificado.");
+      setQuoteAmount(""); setQuoteNotes(""); setQuoteDays("");
+      refetchMyQuote();
+      qc.invalidateQueries({ queryKey: ["request-detail", requestId] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
+  });
 
   const { data: quotes = [] } = useQuery({
     queryKey: ["request-quotes", requestId],
@@ -160,9 +213,15 @@ function RequestDetail() {
   return (
     <Shell>
       <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 sm:py-10">
-        <Link to="/requests" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Mis solicitudes
-        </Link>
+        {isProviderView ? (
+          <Link to="/search" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Oportunidades
+          </Link>
+        ) : (
+          <Link to="/requests" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Mis solicitudes
+          </Link>
+        )}
 
         <div className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -243,7 +302,69 @@ function RequestDetail() {
           </div>
         )}
 
-        {(req.status === "pending" || req.status === "quoted") && (
+        {(req.status === "pending" || req.status === "quoted") && isProviderView && (
+          <div className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-7">
+            {myQuote ? (
+              <>
+                <div className="flex items-center gap-2 text-success">
+                  <CheckCircle2 className="h-5 w-5" />
+                  <h2 className="font-semibold">Ya enviaste tu cotización</h2>
+                </div>
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  <Info icon={DollarSign} label="Monto" value={`$${Number(myQuote.amount).toLocaleString()}`} />
+                  {myQuote.estimated_days != null && (
+                    <Info icon={Clock} label="Días estimados" value={`${myQuote.estimated_days}`} />
+                  )}
+                  <Info icon={Calendar} label="Enviada" value={new Date(myQuote.created_at).toLocaleDateString()} />
+                </div>
+                {myQuote.notes && (
+                  <div className="mt-3 rounded-xl border border-border bg-background/50 p-3 text-sm">
+                    <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">Tu mensaje</p>
+                    <p className="whitespace-pre-wrap">{myQuote.notes}</p>
+                  </div>
+                )}
+                <p className="mt-3 text-xs text-muted-foreground">
+                  El cliente será notificado. Si acepta tu cotización, podrán chatear directamente.
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold">Enviar cotización al cliente</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Escríbele un mensaje explicando cómo abordarías el trabajo, cuánto cobras y en cuántos días lo tendrías listo. Si acepta, se abrirá el chat.
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">Monto (USD)</label>
+                    <Input type="number" min="1" placeholder="120" value={quoteAmount} onChange={(e) => setQuoteAmount(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">Días estimados (opcional)</label>
+                    <Input type="number" min="1" placeholder="2" value={quoteDays} onChange={(e) => setQuoteDays(e.target.value)} />
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">Mensaje para el cliente</label>
+                  <Textarea
+                    rows={4}
+                    maxLength={800}
+                    placeholder="Hola, puedo hacer este trabajo. Incluyo materiales y garantía de 30 días…"
+                    value={quoteNotes}
+                    onChange={(e) => setQuoteNotes(e.target.value)}
+                  />
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <Button onClick={() => sendQuoteMut.mutate()} disabled={sendQuoteMut.isPending} className="rounded-xl">
+                    {sendQuoteMut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-1 h-4 w-4" />}
+                    Enviar cotización
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {(req.status === "pending" || req.status === "quoted") && isOwner && (
           <div className="mt-6">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-semibold">
@@ -280,6 +401,7 @@ function RequestDetail() {
             )}
           </div>
         )}
+
       </div>
 
       {/* Review dialog */}
