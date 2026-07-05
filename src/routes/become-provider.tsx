@@ -752,8 +752,11 @@ function BecomeProvider() {
             </Button>
           </div>
         </Section>
+          </div>
+        </details>
 
         <div className="flex justify-end gap-3">
+
           <Button type="button" variant="outline" onClick={() => navigate({ to: "/dashboard" })}>
             Cancelar
           </Button>
