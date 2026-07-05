@@ -79,7 +79,7 @@ function NavLinks({
   mobile = false,
   onNavigate,
 }: {
-  items: typeof guestNavItems | typeof userNavItems;
+  items: readonly NavItem[];
   pathname: string;
   mobile?: boolean;
   onNavigate?: () => void;
@@ -91,7 +91,7 @@ function NavLinks({
         return (
           <Link
             key={to}
-            to={to}
+            to={to as string}
             onClick={onNavigate}
             className={navLinkClass(active, mobile)}
           >
@@ -111,7 +111,26 @@ export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const isHome = pathname === "/";
-  const navItems = user ? userNavItems : guestNavItems;
+
+  const { data: profile } = useQuery({
+    queryKey: ["nav-profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const navItems = !user
+    ? guestNavItems
+    : profile?.role === "provider"
+      ? providerNavItems
+      : buyerNavItems;
+
 
   const handleSignOut = async () => {
     await signOut();
