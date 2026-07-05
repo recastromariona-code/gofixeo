@@ -35,6 +35,19 @@ function RequestDetail() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [quoteAmount, setQuoteAmount] = useState("");
+  const [quoteNotes, setQuoteNotes] = useState("");
+  const [quoteDays, setQuoteDays] = useState("");
+
+  const { data: myProfile } = useQuery({
+    queryKey: ["my-role", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).maybeSingle();
+      return data;
+    },
+  });
+  const isProvider = myProfile?.role === "provider";
 
   const { data: req, isLoading } = useQuery({
     queryKey: ["request-detail", requestId],
