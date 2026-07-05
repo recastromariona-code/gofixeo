@@ -108,11 +108,11 @@ function ProfilePage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="city">Ciudad</Label>
-              <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Ej. Bogotá" />
+              <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Ej. San Salvador" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Teléfono</Label>
-              <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+57 300 000 0000" />
+              <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+503 6000-0000" />
             </div>
           </div>
 
