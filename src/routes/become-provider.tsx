@@ -294,12 +294,13 @@ function BecomeProvider() {
             <div>
               <h1 className="text-2xl font-bold">Perfil de prestador de servicios</h1>
               <p className="text-sm text-muted-foreground">
-                Construye un perfil completo para que los clientes te encuentren y confíen en tu trabajo.
+                Solo pedimos lo esencial para publicar tu perfil. Puedes ampliar los detalles cuando quieras.
               </p>
             </div>
           </div>
         </div>
       </section>
+
 
       <form
         onSubmit={(e) => {
