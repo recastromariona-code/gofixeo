@@ -28,6 +28,7 @@ const TRUST_SPECIALISTS = [
   { url: techAc1.url, name: "Camila", role: "Técnica HVAC certificada" },
   { url: techAc2.url, name: "Kenji", role: "Refrigeración industrial" },
   { url: techAc3.url, name: "Marco", role: "Instalación y mantenimiento" },
+  { url: techAc4.url, name: "Ricardo", role: "Mantenimiento HVAC" },
 ];
 
 export const Route = createFileRoute("/")({
