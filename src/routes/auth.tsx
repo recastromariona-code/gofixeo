@@ -474,34 +474,7 @@ function AuthPage() {
                   </button>
                 </div>
               </div>
-              {mode === "signup" && (
-                <div>
-                  <Label htmlFor="confirm-password">Confirmar contraseña</Label>
-                  <div className="relative mt-1.5">
-                    <Input
-                      id="confirm-password"
-                      type={showConfirm ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      minLength={6}
-                      className="rounded-xl pr-10"
-                      placeholder="Repite tu contraseña"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirm((v) => !v)}
-                      className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
-                      aria-label={showConfirm ? "Ocultar contraseña" : "Mostrar contraseña"}
-                    >
-                      {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                  {confirmPassword && confirmPassword !== password && (
-                    <p className="mt-1 text-xs text-destructive">Las contraseñas no coinciden</p>
-                  )}
-                </div>
-              )}
+
               <Button type="submit" disabled={loading} className="gradient-brand h-11 w-full rounded-xl">
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
                 {mode === "signup" ? "Crear cuenta" : "Iniciar sesión"}
