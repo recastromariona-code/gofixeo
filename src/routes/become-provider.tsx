@@ -318,16 +318,16 @@ function BecomeProvider() {
               <Input value={user.email ?? ""} readOnly className="bg-muted/40" />
             </Field>
             <Field label="Ciudad" required>
-              <Input value={city} onChange={(e) => setCity(e.target.value)} required placeholder="Bogotá" />
+              <Input value={city} onChange={(e) => setCity(e.target.value)} required placeholder="San Salvador" />
             </Field>
             <Field label="Teléfono">
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+57 300 000 0000" />
+              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+503 6000-0000" />
             </Field>
             <Field label="WhatsApp (con código de país)" className="sm:col-span-2">
               <Input
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value)}
-                placeholder="+57 300 000 0000"
+                placeholder="+503 6000-0000"
               />
             </Field>
           </div>
