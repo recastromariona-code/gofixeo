@@ -200,26 +200,3 @@
     left: 120%;
   }
 }
-
-.trust-marquee-inner {
-  animation: trust-marquee-scroll 24s linear infinite;
-}
-
-.trust-marquee:hover .trust-marquee-inner {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .trust-marquee-inner {
-    animation: none;
-  }
-}
-
-@keyframes trust-marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
