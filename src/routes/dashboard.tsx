@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Clock, Star, DollarSign, Briefcase, Users } from "lucide-react";
+import { MessageSquare, Clock, Star, DollarSign, Briefcase, Users, Eye, Pencil } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/dashboard")({
@@ -71,6 +71,20 @@ function Dashboard() {
     enabled: !!user && isProvider,
   });
 
+  const { data: providerServices = [] } = useQuery({
+    queryKey: ["providerServices", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data } = await supabase
+        .from("services")
+        .select("id, title, description, starting_price, is_active, categories(name)")
+        .eq("provider_id", user.id)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+    enabled: !!user && isProvider,
+  });
+
   const { data: favorites = [] } = useQuery({
     queryKey: ["favorites", user?.id],
     queryFn: async () => {
@@ -111,11 +125,24 @@ function Dashboard() {
 
         {isProvider ? (
           <>
+            <div className="mb-4 flex flex-wrap justify-end gap-2">
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to="/become-provider">
+                  <Pencil className="h-4 w-4" /> Editar mis servicios
+                </Link>
+              </Button>
+              <Button asChild className="gradient-brand rounded-xl">
+                <Link to="/provider/$providerId" params={{ providerId: user.id }}>
+                  <Eye className="h-4 w-4" /> Ver como cliente
+                </Link>
+              </Button>
+            </div>
             <div className="mb-6 grid gap-4 sm:grid-cols-3">
               <StatCard icon={Briefcase} label="Solicitudes" value={String(providerRequests.length)} />
               <StatCard icon={Star} label="Calificación" value={Number(providerStats?.rating ?? 0).toFixed(1)} />
               <StatCard icon={Users} label="Reseñas" value={String(providerStats?.reviews_count ?? 0)} />
             </div>
+            <ProviderServicesPreview services={providerServices} />
             <RequestList
               rows={providerRequests}
               emptyText="Aún no tienes solicitudes. Comparte tu perfil para recibir clientes."
@@ -196,6 +223,68 @@ type RequestRow = {
   client?: { full_name: string | null; avatar_url: string | null } | null;
   provider?: { profiles?: { full_name: string | null; avatar_url: string | null } | null } | null;
 };
+
+type ServiceRow = {
+  id: string;
+  title: string;
+  description: string | null;
+  starting_price: number | null;
+  is_active: boolean | null;
+  categories?: { name: string | null } | null;
+};
+
+function ProviderServicesPreview({ services }: { services: ServiceRow[] }) {
+  return (
+    <section className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-semibold">Mis servicios publicados</h2>
+          <p className="text-sm text-muted-foreground">Vista previa de cómo tus servicios aparecen en tu perfil público.</p>
+        </div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/become-provider">Administrar</Link>
+        </Button>
+      </div>
+
+      {services.length === 0 ? (
+        <div className="mt-4 rounded-xl border border-dashed border-border bg-muted/30 p-6 text-center text-sm text-muted-foreground">
+          Aún no has agregado servicios específicos.
+        </div>
+      ) : (
+        <div className="mt-4 grid gap-3">
+          {services.map((service) => (
+            <div key={service.id} className="rounded-xl border border-border p-4 transition hover:border-primary/40">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-medium text-foreground">{service.title}</h3>
+                    {!service.is_active && (
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                        Oculto
+                      </span>
+                    )}
+                  </div>
+                  {service.description && <p className="mt-1 text-sm text-muted-foreground">{service.description}</p>}
+                </div>
+                {service.starting_price != null && (
+                  <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary">
+                    <DollarSign className="h-3.5 w-3.5" />
+                    desde {Number(service.starting_price).toLocaleString()}
+                  </span>
+                )}
+              </div>
+              {service.categories?.name && (
+                <span className="mt-3 inline-block rounded-full bg-brand-soft px-2 py-0.5 text-xs font-medium text-primary">
+                  {service.categories.name}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 function RequestList({ rows, emptyText }: { rows: RequestRow[]; emptyText: string }) {
   if (rows.length === 0) return <EmptyBox text={emptyText} />;
