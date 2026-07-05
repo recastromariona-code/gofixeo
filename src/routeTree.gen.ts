@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BecomeProviderRouteImport } from './routes/become-provider'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RequestsNewRouteImport } from './routes/requests.new'
 import { Route as ProviderProviderIdRouteImport } from './routes/provider.$providerId'
 import { Route as ChatRequestIdRouteImport } from './routes/chat.$requestId'
 
@@ -54,6 +55,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RequestsNewRoute = RequestsNewRouteImport.update({
+  id: '/requests/new',
+  path: '/requests/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProviderProviderIdRoute = ProviderProviderIdRouteImport.update({
   id: '/provider/$providerId',
   path: '/provider/$providerId',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/chat/$requestId': typeof ChatRequestIdRoute
   '/provider/$providerId': typeof ProviderProviderIdRoute
+  '/requests/new': typeof RequestsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/chat/$requestId': typeof ChatRequestIdRoute
   '/provider/$providerId': typeof ProviderProviderIdRoute
+  '/requests/new': typeof RequestsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/chat/$requestId': typeof ChatRequestIdRoute
   '/provider/$providerId': typeof ProviderProviderIdRoute
+  '/requests/new': typeof RequestsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/chat/$requestId'
     | '/provider/$providerId'
+    | '/requests/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/chat/$requestId'
     | '/provider/$providerId'
+    | '/requests/new'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/chat/$requestId'
     | '/provider/$providerId'
+    | '/requests/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ChatRequestIdRoute: typeof ChatRequestIdRoute
   ProviderProviderIdRoute: typeof ProviderProviderIdRoute
+  RequestsNewRoute: typeof RequestsNewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/requests/new': {
+      id: '/requests/new'
+      path: '/requests/new'
+      fullPath: '/requests/new'
+      preLoaderRoute: typeof RequestsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/provider/$providerId': {
       id: '/provider/$providerId'
       path: '/provider/$providerId'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ChatRequestIdRoute: ChatRequestIdRoute,
   ProviderProviderIdRoute: ProviderProviderIdRoute,
+  RequestsNewRoute: RequestsNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
