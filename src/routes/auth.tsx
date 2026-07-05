@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import type { User as AuthUser } from "@supabase/supabase-js";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +22,11 @@ import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
 
 const searchSchema = z.object({ mode: z.enum(["login", "signup"]).optional() });
+const googleRoleStorageKey = "fixeo-google-role";
+type UserRole = "client" | "provider";
+
+const isUserRole = (value: string | null): value is UserRole =>
+  value === "client" || value === "provider";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -41,11 +47,72 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
+  const [signupMethod, setSignupMethod] = useState<"email" | "google" | null>(null);
+
+  const applyRoleToCurrentUser = async (role: UserRole, authUser: AuthUser) => {
+    const displayName =
+      authUser.user_metadata?.full_name ??
+      authUser.user_metadata?.name ??
+      authUser.email?.split("@")[0] ??
+      null;
+    const avatarUrl =
+      authUser.user_metadata?.avatar_url ??
+      authUser.user_metadata?.picture ??
+      null;
+
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: authUser.id,
+          full_name: displayName,
+          avatar_url: avatarUrl,
+          role,
+        },
+        { onConflict: "id" },
+      );
+
+    if (profileError) throw profileError;
+
+    if (role === "provider") {
+      const { error: providerError } = await supabase
+        .from("providers")
+        .upsert({ id: authUser.id }, { onConflict: "id" });
+
+      if (providerError) throw providerError;
+    }
+  };
 
   useEffect(() => {
-    if (!authLoading && user && !showRoleDialog) {
+    if (authLoading || !user || showRoleDialog) return;
+
+    const storedRole = window.localStorage.getItem(googleRoleStorageKey);
+    const pendingRole = isUserRole(storedRole) ? storedRole : null;
+
+    if (!pendingRole) {
       navigate({ to: "/dashboard" });
+      return;
     }
+
+    let ignore = false;
+    setLoading(true);
+    applyRoleToCurrentUser(pendingRole, user)
+      .then(() => {
+        window.localStorage.removeItem(googleRoleStorageKey);
+        if (!ignore) {
+          navigate({ to: pendingRole === "provider" ? "/become-provider" : "/search" });
+        }
+      })
+      .catch((err) => {
+        if (!ignore) toast.error(getAuthErrorMessage(err));
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [user, authLoading, showRoleDialog, navigate]);
 
   const getAuthErrorMessage = (err: unknown): string => {
@@ -83,17 +150,46 @@ function AuthPage() {
     return err.message;
   };
 
-  const handleGoogle = async () => {
+  const handleGoogle = async (role?: UserRole) => {
+    if (mode === "signup" && !role) {
+      setSignupMethod("google");
+      setShowRoleDialog(true);
+      return;
+    }
+
     setLoading(true);
+    if (role) {
+      window.localStorage.setItem(googleRoleStorageKey, role);
+    }
+
+    const redirectPath = role || mode === "signup" ? "/auth?mode=signup" : "/auth";
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/auth",
+      redirect_uri: window.location.origin + redirectPath,
     });
+
     if (result.error) {
+      if (role) window.localStorage.removeItem(googleRoleStorageKey);
       toast.error(getAuthErrorMessage(result.error));
       setLoading(false);
       return;
     }
-    if (!result.redirected) navigate({ to: "/dashboard" });
+
+    if (!result.redirected) {
+      if (role) {
+        const { data, error } = await supabase.auth.getUser();
+        if (error || !data.user) {
+          window.localStorage.removeItem(googleRoleStorageKey);
+          toast.error("No pudimos confirmar la sesión de Google. Intenta de nuevo.");
+          setLoading(false);
+          return;
+        }
+        await applyRoleToCurrentUser(role, data.user);
+        window.localStorage.removeItem(googleRoleStorageKey);
+        navigate({ to: role === "provider" ? "/become-provider" : "/search" });
+        return;
+      }
+      navigate({ to: "/dashboard" });
+    }
   };
 
   const handleEmail = async (e: React.FormEvent) => {
@@ -108,6 +204,7 @@ function AuthPage() {
         toast.error("La contraseña debe tener al menos 6 caracteres");
         return;
       }
+      setSignupMethod("email");
       setShowRoleDialog(true);
       return;
     }
@@ -124,7 +221,12 @@ function AuthPage() {
     }
   };
 
-  const selectRole = async (role: "client" | "provider") => {
+  const selectRole = async (role: UserRole) => {
+    if (signupMethod === "google") {
+      await handleGoogle(role);
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -147,6 +249,7 @@ function AuthPage() {
       } else {
         setVerificationEmail(email);
         setShowRoleDialog(false);
+        setSignupMethod(null);
       }
     } catch (err) {
       toast.error(getAuthErrorMessage(err));
@@ -218,7 +321,7 @@ function AuthPage() {
               type="button"
               variant="outline"
               className="w-full rounded-xl"
-              onClick={handleGoogle}
+              onClick={() => handleGoogle()}
               disabled={loading}
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
@@ -317,7 +420,13 @@ function AuthPage() {
         </div>
       </div>
 
-      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+      <Dialog
+        open={showRoleDialog}
+        onOpenChange={(open) => {
+          setShowRoleDialog(open);
+          if (!open) setSignupMethod(null);
+        }}
+      >
         <DialogContent className="max-w-md sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-center text-xl">
