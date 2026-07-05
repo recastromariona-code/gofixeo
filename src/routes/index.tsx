@@ -22,11 +22,13 @@ import { useState } from "react";
 import techAc1 from "@/assets/tech-ac-1.png.asset.json";
 import techAc2 from "@/assets/tech-ac-2.png.asset.json";
 import techAc3 from "@/assets/tech-ac-3.png.asset.json";
+import techAc4 from "@/assets/tech-ac-4.png.asset.json";
 
 const TRUST_SPECIALISTS = [
   { url: techAc1.url, name: "Camila", role: "Técnica HVAC certificada" },
   { url: techAc2.url, name: "Kenji", role: "Refrigeración industrial" },
   { url: techAc3.url, name: "Marco", role: "Instalación y mantenimiento" },
+  { url: techAc4.url, name: "Ricardo", role: "Mantenimiento HVAC" },
 ];
 
 export const Route = createFileRoute("/")({
