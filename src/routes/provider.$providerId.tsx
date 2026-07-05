@@ -15,6 +15,7 @@ import {
 import { Star, MapPin, BadgeCheck, MessageSquare, Phone, Calendar, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export const Route = createFileRoute("/provider/$providerId")({
   component: ProviderProfile,
