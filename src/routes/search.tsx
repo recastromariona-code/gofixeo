@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Search as SearchIcon, Filter, MapPin, Clock, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useUserRole } from "@/hooks/use-user-role";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ProviderCard, type ProviderCardData } from "@/components/ProviderCard";
@@ -35,10 +36,14 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchPage() {
-  const { q: initialQ, category, tab } = Route.useSearch();
+  const { q: initialQ, category, tab, city: cityParam, min, max } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isClient } = useUserRole();
   const [q, setQ] = useState(initialQ ?? "");
+  const [cityInput, setCityInput] = useState(cityParam ?? "");
+  const [minInput, setMinInput] = useState(min != null ? String(min) : "");
+  const [maxInput, setMaxInput] = useState(max != null ? String(max) : "");
   const activeTab = tab ?? "providers";
 
   const { data: categories = [] } = useQuery({
