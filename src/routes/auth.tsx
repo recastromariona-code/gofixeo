@@ -21,12 +21,23 @@ import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import logoDark from "@/assets/fixeo-logo-dark.png.asset.json";
 import { useAuth } from "@/lib/auth";
 
-const searchSchema = z.object({ mode: z.enum(["login", "signup"]).optional() });
+const searchSchema = z.object({
+  mode: z.enum(["login", "signup"]).optional(),
+  next: z.string().optional(),
+});
 const googleRoleStorageKey = "fixeo-google-role";
+const nextStorageKey = "fixeo-next-redirect";
 type UserRole = "client" | "provider";
 
 const isUserRole = (value: string | null): value is UserRole =>
   value === "client" || value === "provider";
+
+/** Only accept safe same-origin relative paths as `next`. */
+const safeNext = (raw: string | null | undefined): string | null => {
+  if (!raw || typeof raw !== "string") return null;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+};
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -34,10 +45,21 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { mode: initialMode } = Route.useSearch();
+  const { mode: initialMode, next: nextParam } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">(initialMode ?? "login");
+  const nextRedirect = safeNext(nextParam);
+  const goNextOr = (fallback: string) => {
+    const stored = safeNext(typeof window !== "undefined" ? window.localStorage.getItem(nextStorageKey) : null);
+    const target = nextRedirect ?? stored;
+    if (typeof window !== "undefined") window.localStorage.removeItem(nextStorageKey);
+    if (target) {
+      window.location.href = target;
+      return;
+    }
+    navigate({ to: fallback });
+  };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
