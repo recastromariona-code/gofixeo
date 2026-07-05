@@ -44,6 +44,7 @@ const guestNavItems: readonly NavItem[] = [
 ];
 
 const buyerNavItems: readonly NavItem[] = [
+  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
   { label: "Mis solicitudes", to: "/requests", icon: FileText, exact: false },
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
