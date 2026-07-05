@@ -151,3 +151,27 @@
 @utility shadow-elevated {
   box-shadow: var(--shadow-elevated);
 }
+
+.verification-notice {
+  position: relative;
+}
+
+.verification-notice::after {
+  animation: verification-sheen 2.8s ease-in-out infinite;
+  background: linear-gradient(110deg, transparent 0%, oklch(1 0 0 / 0.55) 45%, transparent 70%);
+  content: "";
+  inset: 0 auto 0 -45%;
+  pointer-events: none;
+  position: absolute;
+  transform: skewX(-18deg);
+  width: 35%;
+}
+
+@keyframes verification-sheen {
+  0%, 35% {
+    left: -45%;
+  }
+  100% {
+    left: 120%;
+  }
+}

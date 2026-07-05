@@ -146,7 +146,6 @@ function AuthPage() {
         }
       } else {
         setVerificationEmail(email);
-        toast.success("En un momento te llegara un mensaje para verificar tu correo.");
         setShowRoleDialog(false);
       }
     } catch (err) {
@@ -178,7 +177,7 @@ function AuthPage() {
       </div>
 
       {/* Right / form */}
-      <div className="flex items-center justify-center bg-background p-6 md:p-12">
+      <div className="flex items-center justify-center bg-background p-4 md:p-8">
         <div className="w-full max-w-md">
           <div className="mb-8 md:hidden">
             <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
@@ -193,7 +192,7 @@ function AuthPage() {
               : "Ingresa a tu cuenta para continuar."}
           </p>
           {verificationEmail && (
-            <div className="mt-4 rounded-xl border border-primary/20 bg-brand-soft/60 p-4 text-sm text-foreground">
+            <div className="verification-notice mt-4 overflow-hidden rounded-xl border border-primary/20 bg-brand-soft/60 p-3 text-sm text-foreground">
               <div className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <div>
@@ -206,7 +205,7 @@ function AuthPage() {
             </div>
           )}
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-5 space-y-3">
             <Button
               type="button"
               variant="outline"
@@ -224,13 +223,13 @@ function AuthPage() {
             </Button>
           </div>
 
-          <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
             o con correo
             <div className="h-px flex-1 bg-border" />
           </div>
 
-          <form onSubmit={handleEmail} className="space-y-4">
+          <form onSubmit={handleEmail} className="space-y-3">
             {mode === "signup" && (
               <div>
                 <Label htmlFor="name">Nombre completo</Label>
