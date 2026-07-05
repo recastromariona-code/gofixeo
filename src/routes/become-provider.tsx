@@ -682,7 +682,7 @@ function BecomeProvider() {
                             arr.map((x, j) => (j === i ? { ...x, title: e.target.value } : x)),
                           )
                         }
-                        placeholder="Ej: Remodelación de baño en Chapinero"
+                        placeholder="Ej: Remodelación de baño en Escalón"
                       />
                     </Field>
                     <Field label="Descripción">
