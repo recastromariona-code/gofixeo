@@ -16,13 +16,15 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
   handler: async ({ request_id, amount, message, estimated_days }, ctx) => {
     if (!ctx.isAuthenticated()) return errorResult("Debes estar autenticado como prestador.");
+    const userId = ctx.getUserId();
+    if (!userId) return errorResult("No pudimos identificar tu usuario.");
     if (!request_id || amount == null || !message) return errorResult("Faltan parámetros obligatorios.");
     const sb = supabaseForUser(ctx);
     const { data, error } = await sb
       .from("quotes")
       .insert({
         request_id,
-        provider_id: ctx.getUserId(),
+        provider_id: userId,
         amount,
         notes: message,
         estimated_days: estimated_days ?? null,
