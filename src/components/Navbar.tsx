@@ -52,6 +52,7 @@ const buyerNavItems: readonly NavItem[] = [
 ];
 
 const providerNavItems: readonly NavItem[] = [
+  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
   { label: "Oportunidades", to: "/search", icon: Briefcase, exact: false },
   { label: "Mi perfil profesional", to: "/become-provider", icon: Wrench, exact: false },
