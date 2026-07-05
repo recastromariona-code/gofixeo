@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Clock, Star, DollarSign, Briefcase, Users, Eye, Pencil } from "lucide-react";
+import { MessageSquare, Clock, Star, DollarSign, Briefcase, Users, Eye, Pencil, MapPin, Zap, Inbox } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/dashboard")({
@@ -330,5 +330,75 @@ function RequestList({ rows, emptyText }: { rows: RequestRow[]; emptyText: strin
         );
       })}
     </div>
+  );
+}
+
+type MatchedRow = {
+  id: string;
+  title: string | null;
+  description: string;
+  city: string | null;
+  urgency: string;
+  created_at: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  category: { name: string | null } | null;
+};
+
+function MatchedRequestsPreview({ rows }: { rows: MatchedRow[] }) {
+  return (
+    <section className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-semibold">Oportunidades que coinciden con tu perfil</h2>
+          <p className="text-sm text-muted-foreground">
+            Solicitudes abiertas de las categorías que ofreces. Envía tu cotización para ganar el trabajo.
+          </p>
+        </div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/search" search={{ tab: "requests" } as never}>Ver todas</Link>
+        </Button>
+      </div>
+
+      {rows.length === 0 ? (
+        <div className="mt-4 rounded-xl border border-dashed border-border bg-muted/30 p-6 text-center text-sm text-muted-foreground">
+          <Inbox className="mx-auto mb-2 h-6 w-6" />
+          Por ahora no hay solicitudes abiertas que coincidan con tus categorías.
+        </div>
+      ) : (
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {rows.map((r) => (
+            <Link
+              key={r.id}
+              to="/requests/$requestId"
+              params={{ requestId: r.id }}
+              className="rounded-xl border border-border p-4 transition hover:border-primary/40"
+            >
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                {r.category?.name && (
+                  <span className="rounded-full bg-brand-soft px-2 py-0.5 font-medium text-primary">{r.category.name}</span>
+                )}
+                {r.urgency === "high" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2 py-0.5 font-medium text-destructive">
+                    <Zap className="h-3 w-3" /> Urgente
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-2 truncate font-medium">{r.title ?? r.description.slice(0, 60)}</h3>
+              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{r.description}</p>
+              <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                {r.city && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{r.city}</span>}
+                {(r.budget_min || r.budget_max) && (
+                  <span className="inline-flex items-center gap-1">
+                    <DollarSign className="h-3 w-3" />
+                    {r.budget_min ?? "?"}–{r.budget_max ?? "?"}
+                  </span>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
