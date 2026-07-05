@@ -16,6 +16,7 @@ import { Footer } from "@/components/Footer";
 import { CategoryCard, type CategoryCardData } from "@/components/CategoryCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TrustSpecialistsBar } from "@/components/TrustSpecialistsBar";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -257,6 +258,8 @@ function Landing() {
               Diseñamos cada paso para que contratar un especialista sea claro, rápido y seguro.
             </p>
           </div>
+
+          <TrustSpecialistsBar />
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {TRUST_PILLARS.map((item, i) => (
