@@ -223,7 +223,7 @@ function SearchPage() {
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Ej: electricista, aire acondicionado, Bogotá…"
+                placeholder="Ej: electricista, aire acondicionado, San Salvador…"
                 className="border-0 bg-transparent shadow-none focus-visible:ring-0"
               />
             </div>
