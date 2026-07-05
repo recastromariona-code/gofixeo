@@ -234,6 +234,7 @@ function ProviderProfile() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+              )}
               {waLink && (
                 <Button asChild variant="outline" className="rounded-xl">
                   <a href={waLink} target="_blank" rel="noreferrer">
