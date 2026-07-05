@@ -15,6 +15,7 @@ import {
 import { Star, MapPin, BadgeCheck, MessageSquare, Phone, Calendar, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export const Route = createFileRoute("/provider/$providerId")({
   component: ProviderProfile,
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/provider/$providerId")({
 function ProviderProfile() {
   const { providerId } = Route.useParams();
   const { user } = useAuth();
+  const { isProvider, isGuest } = useUserRole();
+  const canRequestQuote = isGuest || !isProvider;
   const navigate = useNavigate();
   const qc = useQueryClient();
 
@@ -173,6 +176,7 @@ function ProviderProfile() {
               </div>
             </div>
             <div className="flex flex-col gap-2 md:min-w-[220px]">
+              {canRequestQuote && (
               <Dialog open={openQuote} onOpenChange={setOpenQuote}>
                 <DialogTrigger asChild>
                   <Button
@@ -230,6 +234,7 @@ function ProviderProfile() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+              )}
               {waLink && (
                 <Button asChild variant="outline" className="rounded-xl">
                   <a href={waLink} target="_blank" rel="noreferrer">
