@@ -241,7 +241,7 @@ function SearchPage() {
             <div className="space-y-1">
               <Link
                 to="/search"
-                search={{ q: initialQ, tab: activeTab } as never}
+                search={{ q: initialQ, tab: activeTab, city: cityParam, min, max } as never}
                 className={`block rounded-lg px-3 py-2 text-sm ${!category ? "bg-brand-soft font-medium text-primary" : "hover:bg-muted"}`}
               >
                 Todas
@@ -250,7 +250,7 @@ function SearchPage() {
                 <Link
                   key={c.id}
                   to="/search"
-                  search={{ q: initialQ, category: c.slug, tab: activeTab } as never}
+                  search={{ q: initialQ, category: c.slug, tab: activeTab, city: cityParam, min, max } as never}
                   className={`block rounded-lg px-3 py-2 text-sm ${category === c.slug ? "bg-brand-soft font-medium text-primary" : "hover:bg-muted"}`}
                 >
                   {c.name}
@@ -258,6 +258,78 @@ function SearchPage() {
               ))}
             </div>
           </div>
+
+          {activeTab === "services" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                navigate({
+                  to: "/search",
+                  search: {
+                    q: initialQ,
+                    category,
+                    tab: activeTab,
+                    city: cityInput || undefined,
+                    min: minInput ? Number(minInput) : undefined,
+                    max: maxInput ? Number(maxInput) : undefined,
+                  } as never,
+                });
+              }}
+              className="mt-4 rounded-2xl border border-border bg-card p-4 shadow-soft"
+            >
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                <Filter className="h-4 w-4" /> Filtros
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Zona de cobertura</label>
+                  <Input
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    placeholder="Ciudad o zona"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">Presupuesto</label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      min={0}
+                      value={minInput}
+                      onChange={(e) => setMinInput(e.target.value)}
+                      placeholder="Mín"
+                    />
+                    <Input
+                      type="number"
+                      min={0}
+                      value={maxInput}
+                      onChange={(e) => setMaxInput(e.target.value)}
+                      placeholder="Máx"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button type="submit" size="sm" className="flex-1 rounded-lg">Aplicar</Button>
+                  {(cityParam || min != null || max != null) && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-lg"
+                      onClick={() => {
+                        setCityInput("");
+                        setMinInput("");
+                        setMaxInput("");
+                        navigate({ to: "/search", search: { q: initialQ, category, tab: activeTab } as never });
+                      }}
+                    >
+                      Limpiar
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </form>
+          )}
         </aside>
 
         <div>
