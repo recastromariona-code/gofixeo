@@ -213,9 +213,15 @@ function RequestDetail() {
   return (
     <Shell>
       <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 sm:py-10">
-        <Link to="/requests" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Mis solicitudes
-        </Link>
+        {isProviderView ? (
+          <Link to="/search" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Oportunidades
+          </Link>
+        ) : (
+          <Link to="/requests" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Mis solicitudes
+          </Link>
+        )}
 
         <div className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-3">
