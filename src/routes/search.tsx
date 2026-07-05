@@ -39,12 +39,13 @@ function SearchPage() {
   const { q: initialQ, category, tab, city: cityParam, min, max } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isClient } = useUserRole();
+  const { isClient, isProvider } = useUserRole();
   const [q, setQ] = useState(initialQ ?? "");
   const [cityInput, setCityInput] = useState(cityParam ?? "");
   const [minInput, setMinInput] = useState(min != null ? String(min) : "");
   const [maxInput, setMaxInput] = useState(max != null ? String(max) : "");
-  const activeTab = tab ?? "providers";
+  // Providers only see client quote requests in "Oportunidades".
+  const activeTab = isProvider ? "requests" : (tab ?? "providers");
 
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
