@@ -131,9 +131,6 @@ function Dashboard() {
               <Button asChild className="rounded-xl">
                 <Link to="/requests/new">+ Nueva solicitud</Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link to="/become-provider">Ser prestador</Link>
-              </Button>
             </div>
           )}
         </div>

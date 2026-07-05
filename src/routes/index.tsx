@@ -17,6 +17,7 @@ import { CategoryCard, type CategoryCardData } from "@/components/CategoryCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TrustSpecialistsBar } from "@/components/TrustSpecialistsBar";
+import { useUserRole } from "@/hooks/use-user-role";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -76,6 +77,7 @@ const HOW_IT_WORKS = [
 
 function Landing() {
   const navigate = useNavigate();
+  const { isClient } = useUserRole();
   const [q, setQ] = useState("");
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -164,11 +166,13 @@ function Landing() {
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild variant="outline" size="lg" className="rounded-xl bg-card/60">
-                  <Link to="/become-provider">Quiero ofrecer mis servicios</Link>
-                </Button>
-              </div>
+              {!isClient && (
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild variant="outline" size="lg" className="rounded-xl bg-card/60">
+                    <Link to="/become-provider">Quiero ofrecer mis servicios</Link>
+                  </Button>
+                </div>
+              )}
             </motion.div>
 
             <motion.div

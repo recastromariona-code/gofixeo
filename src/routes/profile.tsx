@@ -123,26 +123,6 @@ function ProfilePage() {
           </div>
         </form>
 
-        {!isProvider && (
-          <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-primary">
-                  <Wrench className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="font-semibold">¿También ofreces servicios?</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Crea un perfil de prestador para publicar tu portafolio y recibir solicitudes.
-                  </p>
-                </div>
-              </div>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link to="/become-provider">Ser prestador</Link>
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
       <Footer />
     </div>
