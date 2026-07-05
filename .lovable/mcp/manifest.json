@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://rjpteaifpzkexrgadxir.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "fixeo-mcp",
+      "version": "0.1.0",
+      "title": "FIXEO — Servicios del hogar"
+    },
+    "tools": [
+      {
+        "name": "list_categories",
+        "title": "Listar categorías",
+        "description": "Devuelve las categorías de servicios de FIXEO con su slug (útil como parámetro de otros tools).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_providers",
+        "title": "Buscar prestadores",
+        "description": "Busca prestadores de servicios en FIXEO por texto libre, categoría (slug) y/o ciudad. Devuelve nombre, ciudad, calificación, número de reseñas y biografía.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Texto libre (ej: 'aire acondicionado').",
+              "type": "string"
+            },
+            "category": {
+              "description": "Slug de categoría (ej: 'fontaneria').",
+              "type": "string"
+            },
+            "city": {
+              "description": "Ciudad o zona de cobertura.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Máximo de resultados (por defecto 10).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_services",
+        "title": "Buscar servicios ofertados",
+        "description": "Busca servicios publicados por prestadores en FIXEO. Filtra por texto, categoría (slug), ciudad/zona y rango de presupuesto (starting_price).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "category": {
+              "description": "Slug de categoría.",
+              "type": "string"
+            },
+            "city": {
+              "description": "Ciudad o zona del prestador.",
+              "type": "string"
+            },
+            "min_price": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max_price": {
+              "type": "number",
+              "minimum": 0
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_requests",
+        "title": "Mis solicitudes",
+        "description": "Lista las solicitudes de cotización del usuario autenticado (creadas por él como comprador). Puede filtrarse por estado.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Filtra por estado.",
+              "type": "string",
+              "enum": [
+                "pending",
+                "quoted",
+                "accepted",
+                "completed",
+                "cancelled"
+              ]
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_open_requests",
+        "title": "Solicitudes abiertas para prestadores",
+        "description": "Para prestadores autenticados: lista solicitudes abiertas (sin prestador asignado) que coinciden con sus categorías. Aplica RLS de FIXEO.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Slug de categoría para filtrar.",
+              "type": "string"
+            },
+            "city": {
+              "description": "Ciudad para filtrar.",
+              "type": "string"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_quote_request",
+        "title": "Crear solicitud de cotización",
+        "description": "Crea una nueva solicitud de cotización en FIXEO en nombre del usuario autenticado (comprador). Los prestadores que coincidan podrán enviar propuestas.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Título breve del trabajo."
+            },
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descripción detallada del trabajo requerido."
+            },
+            "category": {
+              "type": "string",
+              "description": "Slug de la categoría (usa list_categories)."
+            },
+            "city": {
+              "type": "string",
+              "description": "Ciudad donde se realizará el trabajo."
+            },
+            "address": {
+              "type": "string"
+            },
+            "urgency": {
+              "description": "Nivel de urgencia (por defecto medium).",
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "budget_min": {
+              "type": "number",
+              "minimum": 0
+            },
+            "budget_max": {
+              "type": "number",
+              "minimum": 0
+            },
+            "preferred_date": {
+              "description": "Fecha preferida en formato ISO (YYYY-MM-DD).",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "description",
+            "category",
+            "city"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "submit_quote",
+        "title": "Enviar cotización a una solicitud",
+        "description": "Como prestador autenticado, envía una propuesta económica a una solicitud abierta. Las RLS de FIXEO validan que la solicitud sea compatible con tus categorías.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "ID de la solicitud (obtenido con list_open_requests)."
+            },
+            "amount": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Monto propuesto (en moneda del prestador)."
+            },
+            "message": {
+              "type": "string",
+              "minLength": 5,
+              "description": "Mensaje al comprador explicando la propuesta."
+            },
+            "estimated_days": {
+              "description": "Días estimados para completar.",
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "request_id",
+            "amount",
+            "message"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

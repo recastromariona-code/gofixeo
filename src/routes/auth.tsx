@@ -28,12 +28,23 @@ const TRUST_POINTS = [
   "Chat y WhatsApp directo",
 ] as const;
 
-const searchSchema = z.object({ mode: z.enum(["login", "signup"]).optional() });
+const searchSchema = z.object({
+  mode: z.enum(["login", "signup"]).optional(),
+  next: z.string().optional(),
+});
 const googleRoleStorageKey = "fixeo-google-role";
+const nextStorageKey = "fixeo-next-redirect";
 type UserRole = "client" | "provider";
 
 const isUserRole = (value: string | null): value is UserRole =>
   value === "client" || value === "provider";
+
+/** Only accept safe same-origin relative paths as `next`. */
+const safeNext = (raw: string | null | undefined): string | null => {
+  if (!raw || typeof raw !== "string") return null;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+};
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -41,10 +52,21 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { mode: initialMode } = Route.useSearch();
+  const { mode: initialMode, next: nextParam } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">(initialMode ?? "login");
+  const nextRedirect = safeNext(nextParam);
+  const goNextOr = (fallback: string) => {
+    const stored = safeNext(typeof window !== "undefined" ? window.localStorage.getItem(nextStorageKey) : null);
+    const target = nextRedirect ?? stored;
+    if (typeof window !== "undefined") window.localStorage.removeItem(nextStorageKey);
+    if (target) {
+      window.location.href = target;
+      return;
+    }
+    navigate({ to: fallback });
+  };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -90,6 +112,13 @@ function AuthPage() {
     }
   };
 
+  // Persist the requested next-redirect so it survives OAuth round-trips and email verification.
+  useEffect(() => {
+    if (nextRedirect && typeof window !== "undefined") {
+      window.localStorage.setItem(nextStorageKey, nextRedirect);
+    }
+  }, [nextRedirect]);
+
   useEffect(() => {
     if (authLoading || !user || showRoleDialog) return;
 
@@ -97,7 +126,7 @@ function AuthPage() {
     const pendingRole = isUserRole(storedRole) ? storedRole : null;
 
     if (!pendingRole) {
-      navigate({ to: "/dashboard" });
+      goNextOr("/dashboard");
       return;
     }
 
@@ -107,7 +136,7 @@ function AuthPage() {
       .then(() => {
         window.localStorage.removeItem(googleRoleStorageKey);
         if (!ignore) {
-          navigate({ to: pendingRole === "provider" ? "/become-provider" : "/search" });
+          goNextOr(pendingRole === "provider" ? "/become-provider" : "/search");
         }
       })
       .catch((err) => {
@@ -120,7 +149,8 @@ function AuthPage() {
     return () => {
       ignore = true;
     };
-  }, [user, authLoading, showRoleDialog, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading, showRoleDialog]);
 
   const getAuthErrorMessage = (err: unknown): string => {
     if (!(err instanceof Error)) return "Ocurrió un error inesperado. Intenta de nuevo.";
@@ -169,7 +199,8 @@ function AuthPage() {
       window.localStorage.setItem(googleRoleStorageKey, role);
     }
 
-    const redirectPath = role || mode === "signup" ? "/auth?mode=signup" : "/auth";
+    const nextQ = nextRedirect ? `&next=${encodeURIComponent(nextRedirect)}` : "";
+    const redirectPath = role || mode === "signup" ? `/auth?mode=signup${nextQ}` : `/auth${nextQ ? `?${nextQ.slice(1)}` : ""}`;
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + redirectPath,
     });
@@ -192,10 +223,10 @@ function AuthPage() {
         }
         await applyRoleToCurrentUser(role, data.user);
         window.localStorage.removeItem(googleRoleStorageKey);
-        navigate({ to: role === "provider" ? "/become-provider" : "/search" });
+        goNextOr(role === "provider" ? "/become-provider" : "/search");
         return;
       }
-      navigate({ to: "/dashboard" });
+      goNextOr("/dashboard");
     }
   };
 
@@ -220,7 +251,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       toast.success("Bienvenido de nuevo");
-      navigate({ to: "/dashboard" });
+      goNextOr("/dashboard");
     } catch (err) {
       toast.error(getAuthErrorMessage(err));
     } finally {
@@ -236,11 +267,14 @@ function AuthPage() {
 
     setLoading(true);
     try {
+      const emailRedirect = nextRedirect
+        ? `${window.location.origin}/auth?next=${encodeURIComponent(nextRedirect)}`
+        : `${window.location.origin}/dashboard`;
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + "/dashboard",
+          emailRedirectTo: emailRedirect,
           data: { full_name: fullName, role },
         },
       });
@@ -248,11 +282,7 @@ function AuthPage() {
 
       if (data.session) {
         toast.success("¡Cuenta creada! Redirigiendo...");
-        if (role === "provider") {
-          navigate({ to: "/become-provider" });
-        } else {
-          navigate({ to: "/search" });
-        }
+        goNextOr(role === "provider" ? "/become-provider" : "/search");
       } else {
         setVerificationEmail(email);
         setShowRoleDialog(false);
