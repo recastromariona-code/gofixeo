@@ -121,7 +121,7 @@ function SearchPage() {
         .select(
           `id, title, description, city, urgency, budget_min, budget_max, created_at, preferred_date, status,
            categories(name, slug),
-           quotes(count)`,
+           quotes!quotes_request_id_fkey(count)`,
         )
         .is("provider_id", null)
         .in("status", ["pending", "quoted"])
