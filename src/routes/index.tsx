@@ -263,6 +263,8 @@ function Landing() {
             </p>
           </div>
 
+          <TrustSpecialistsBar />
+
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {TRUST_PILLARS.map((item, i) => (
               <motion.div

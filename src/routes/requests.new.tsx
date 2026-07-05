@@ -19,7 +19,7 @@ export const Route = createFileRoute("/requests/new")({
   head: () => ({
     meta: [
       { title: "Nueva solicitud de servicio · FIXEO" },
-      { name: "description", content: "Publica tu solicitud y recibe cotizaciones de los mejores prestadores de servicios cerca de ti." },
+      { name: "description", content: "Publica tu solicitud y recibe cotizaciones de los mejores especialistas cerca de ti." },
     ],
   }),
 });
@@ -137,7 +137,7 @@ function NewRequestPage() {
         </Link>
         <h1 className="text-2xl font-bold sm:text-3xl">Publica tu solicitud</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          En pocos minutos recibirás cotizaciones de prestadores calificados que cumplen con tus requisitos.
+          En pocos minutos recibirás cotizaciones de especialistas calificados que cumplen con tus requisitos.
         </p>
 
         <form

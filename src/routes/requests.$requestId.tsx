@@ -99,7 +99,7 @@ function RequestDetail() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("¡Proveedor contratado! Puedes coordinar por chat.");
+      toast.success("¡Especialista contratado! Puedes coordinar por chat.");
       qc.invalidateQueries({ queryKey: ["request-detail", requestId] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
@@ -208,18 +208,18 @@ function RequestDetail() {
           )}
         </div>
 
-        {/* Sección de cotizaciones / proveedor asignado */}
+        {/* Sección de cotizaciones / especialista asignado */}
         {req.status === "accepted" && acceptedQuote && (
           <div className="mt-6 rounded-2xl border border-primary/40 bg-brand-soft/30 p-5 shadow-soft sm:p-7">
             <div className="flex items-center gap-2 text-primary">
               <CheckCircle2 className="h-5 w-5" />
-              <h2 className="font-semibold">Proveedor contratado</h2>
+              <h2 className="font-semibold">Especialista contratado</h2>
             </div>
             <QuoteRow quote={acceptedQuote} accepted highlighted />
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Button asChild variant="outline" className="rounded-xl">
                 <Link to="/chat/$requestId" params={{ requestId }}>
-                  <MessageSquare className="mr-1 h-4 w-4" /> Chatear con el proveedor
+                  <MessageSquare className="mr-1 h-4 w-4" /> Chatear con el especialista
                 </Link>
               </Button>
               <Button onClick={() => completeMut.mutate()} disabled={completeMut.isPending} className="rounded-xl">
@@ -253,7 +253,7 @@ function RequestDetail() {
             </div>
             {sortedQuotes.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
-                Aún no has recibido cotizaciones. Los proveedores que coincidan con tu solicitud recibirán una notificación automáticamente.
+                Aún no has recibido cotizaciones. Los especialistas que coincidan con tu solicitud recibirán una notificación automáticamente.
               </div>
             ) : (
               <div className="space-y-3">
@@ -310,7 +310,7 @@ function RequestDetail() {
       <Dialog open={confirmCancel} onOpenChange={setConfirmCancel}>
         <DialogContent>
           <DialogHeader><DialogTitle>¿Cancelar solicitud?</DialogTitle></DialogHeader>
-          <p className="text-sm text-muted-foreground">Los proveedores ya no podrán enviarte cotizaciones para esta solicitud.</p>
+          <p className="text-sm text-muted-foreground">Los especialistas ya no podrán enviarte cotizaciones para esta solicitud.</p>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setConfirmCancel(false)}>Volver</Button>
             <Button variant="destructive" onClick={() => cancelMut.mutate()} disabled={cancelMut.isPending}>
@@ -376,7 +376,7 @@ function QuoteRow({ quote, accepted, highlighted }: { quote: QuoteRowT; accepted
         </Avatar>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="font-semibold truncate">{p?.profiles?.full_name ?? "Proveedor"}</span>
+            <span className="font-semibold truncate">{p?.profiles?.full_name ?? "Especialista"}</span>
             {p?.is_verified && <Badge variant="secondary" className="gap-1"><ShieldCheck className="h-3 w-3" />Verificado</Badge>}
             {accepted && <Badge className="gap-1"><CheckCircle2 className="h-3 w-3" />Aceptado</Badge>}
           </div>

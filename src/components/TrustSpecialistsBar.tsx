@@ -12,21 +12,21 @@ export type TrustSpecialist = {
 const DEFAULT_SPECIALISTS: TrustSpecialist[] = [
   {
     id: "1",
-    name: "Técnica HVAC",
+    name: "Especialista HVAC",
     role: "Aire acondicionado",
     image: "/trust/specialist-1.png",
     searchQuery: "Aire acondicionado",
   },
   {
     id: "2",
-    name: "Técnico climatización",
+    name: "Especialista en climatización",
     role: "Climatización",
     image: "/trust/specialist-2.png",
     searchQuery: "Climatización",
   },
   {
     id: "3",
-    name: "Técnico mantenimiento",
+    name: "Especialista en mantenimiento",
     role: "Mantenimiento",
     image: "/trust/specialist-3.png",
     searchQuery: "Mantenimiento",

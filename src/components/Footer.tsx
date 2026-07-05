@@ -52,7 +52,7 @@ export function Footer() {
             <FixeoLogo className="h-10" />
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            El marketplace de especialistas del hogar, técnicos y oficios en Latinoamérica.
+            Marketplace de especialistas del hogar y oficios en Latinoamérica.
           </p>
         </div>
 

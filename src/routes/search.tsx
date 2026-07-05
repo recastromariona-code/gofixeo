@@ -29,7 +29,7 @@ export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
       { title: "Marketplace — FIXEO" },
-      { name: "description", content: "Encuentra prestadores, servicios ofertados y solicitudes abiertas de trabajo." },
+      { name: "description", content: "Encuentra especialistas, servicios ofertados y solicitudes abiertas de trabajo." },
     ],
   }),
   component: SearchPage,
@@ -200,7 +200,7 @@ function SearchPage() {
 
   const subheading =
     activeTab === "services"
-      ? "Explora servicios publicados por prestadores con precio de referencia."
+      ? "Explora servicios publicados por especialistas con precio de referencia."
       : activeTab === "requests"
         ? "Trabajos que compradores están buscando ahora mismo. Envía tu cotización."
         : "Encuentra especialistas del hogar cerca de ti";
@@ -368,7 +368,7 @@ function SearchPage() {
           >
             {!isProvider && (
               <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
-                <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
+                <TabsTrigger value="providers" className="rounded-lg">Especialistas</TabsTrigger>
                 <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
                 <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
               </TabsList>
@@ -462,7 +462,7 @@ function SearchPage() {
                         <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>
                       )}
                       <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-xs text-muted-foreground">
-                        <span>{s.providers?.profiles?.full_name ?? "Prestador"}</span>
+                        <span>{s.providers?.profiles?.full_name ?? "Especialista"}</span>
                         <span>⭐ {Number(s.providers?.rating ?? 0).toFixed(1)} ({s.providers?.reviews_count ?? 0})</span>
                       </div>
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1 scale-x-0 bg-gradient-to-r from-primary to-primary-glow transition group-hover:scale-x-100" />
@@ -476,7 +476,7 @@ function SearchPage() {
               {!user ? (
                 <EmptyState
                   title="Inicia sesión para ver oportunidades"
-                  desc="Las solicitudes abiertas están disponibles para prestadores registrados."
+                  desc="Las solicitudes abiertas están disponibles para quienes ofrecen servicios en la plataforma."
                   ctaLabel="Ingresar"
                   to="/auth"
                 />
