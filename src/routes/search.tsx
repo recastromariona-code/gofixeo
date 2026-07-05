@@ -486,9 +486,10 @@ function SearchPage() {
                 <EmptyState
                   title="No hay solicitudes abiertas por ahora"
                   desc={activeCategory ? "Prueba con otra categoría o vuelve más tarde." : "Cambia el filtro o vuelve más tarde."}
-                  ctaLabel="Publicar una solicitud"
-                  to="/requests/new"
+                  ctaLabel={isProvider ? "Ver mi perfil" : "Publicar una solicitud"}
+                  to={isProvider ? "/dashboard" : "/requests/new"}
                 />
+
               ) : (
                 <div className="grid gap-4">
                   {requests.map((r) => {
