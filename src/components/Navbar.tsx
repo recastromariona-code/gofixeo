@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { CircleAlert, Menu, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,6 +18,17 @@ export function Navbar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const { data: profile } = useQuery({
+    queryKey: ["profile-role", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+  const userRole = profile?.role ?? user?.user_metadata?.role;
+  const showProviderLinks = userRole === "provider";
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
@@ -24,14 +37,19 @@ export function Navbar() {
           <img src={logoLight.url} alt="FIXEO" className="h-9 w-auto" />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          <Link to="/search" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
-            Buscar servicio
-          </Link>
-          <Link to="/become-provider" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
-            Ser prestador de servicios
-          </Link>
-        </nav>
+        {showProviderLinks && (
+          <nav className="hidden items-center gap-1 md:flex">
+            <Link to="/search" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
+              Buscar servicio
+            </Link>
+            <Link to="/become-provider" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning/15 text-warning">
+                <CircleAlert className="h-3.5 w-3.5" />
+              </span>
+              Completa tu perfil de prestador
+            </Link>
+          </nav>
+        )}
 
         <div className="flex items-center gap-2">
           {user ? (
@@ -70,23 +88,28 @@ export function Navbar() {
               </Button>
             </>
           )}
-          <button
-            className="ml-1 rounded-lg p-2 text-foreground hover:bg-muted md:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Menú"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          {showProviderLinks && (
+            <button
+              className="ml-1 rounded-lg p-2 text-foreground hover:bg-muted md:hidden"
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Menú"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
-      {open && (
+      {open && showProviderLinks && (
         <div className="border-t border-border md:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
             <Link to="/search" className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted" onClick={() => setOpen(false)}>
               Buscar servicio
             </Link>
-            <Link to="/become-provider" className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted" onClick={() => setOpen(false)}>
-              Ser prestador de servicios
+            <Link to="/become-provider" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted" onClick={() => setOpen(false)}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning/15 text-warning">
+                <CircleAlert className="h-3.5 w-3.5" />
+              </span>
+              Completa tu perfil de prestador
             </Link>
           </div>
         </div>

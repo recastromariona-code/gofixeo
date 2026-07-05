@@ -55,7 +55,7 @@
   --radius: 0.875rem;
 
   /* Brand: #000A3E #162570 #4152A3 #818FD6 #CCD5FF */
-  --background: orange;
+  --background: oklch(0.995 0.003 260);
   --foreground: oklch(0.16 0.08 268);
 
   --card: oklch(1 0 0);
@@ -131,7 +131,7 @@
   * { border-color: var(--color-border); }
   html { -webkit-font-smoothing: antialiased; }
   body {
-    background-color: orange;
+    background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
