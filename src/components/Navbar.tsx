@@ -1,9 +1,16 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Cog, Home, LayoutDashboard, LogOut, Search, User as UserIcon } from "lucide-react";
+import { Cog, Home, LayoutDashboard, LogOut, Moon, Search, Sun, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoLight from "@/assets/fixeo-logo-light.png.asset.json";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   { label: "Bienvenida", to: "/", icon: Home },
@@ -19,8 +26,7 @@ export function Navbar() {
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("fixeo-theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldUseDark = savedTheme ? savedTheme === "dark" : prefersDark;
+    const shouldUseDark = savedTheme === "dark";
     document.documentElement.classList.toggle("dark", shouldUseDark);
     setIsDark(shouldUseDark);
   }, []);
@@ -55,33 +61,50 @@ export function Navbar() {
         )}
 
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            onClick={toggleTheme}
-            aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-            title={isDark ? "Modo claro" : "Modo oscuro"}
-          >
-            <Cog className="h-4 w-4" />
-          </Button>
+          {user && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full"
+                  aria-label="Abrir opciones"
+                >
+                  <Cog className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={toggleTheme}>
+                  {isDark ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                  {isDark ? "Modo claro" : "Modo oscuro"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await signOut();
+                    navigate({ to: "/" });
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-          {user ? (
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-full"
-              onClick={async () => {
-                await signOut();
-                navigate({ to: "/" });
-              }}
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Cerrar sesión</span>
-            </Button>
-          ) : (
+          {!user && (
             <>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="rounded-full"
+                onClick={toggleTheme}
+                aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+                title={isDark ? "Modo claro" : "Modo oscuro"}
+              >
+                <Cog className="h-4 w-4" />
+              </Button>
               <Button variant="ghost" size="sm" className="border border-current shadow-sm" onClick={() => navigate({ to: "/auth" })}>
                 Iniciar sesión
               </Button>
