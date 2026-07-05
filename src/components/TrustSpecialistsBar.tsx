@@ -12,7 +12,7 @@ export type TrustSpecialist = {
 const DEFAULT_SPECIALISTS: TrustSpecialist[] = [
   {
     id: "1",
-    name: "Especialista HVAC",
+    name: "Técnica HVAC",
     role: "Aire acondicionado",
     image: "/trust/specialist-1.png",
     searchQuery: "Aire acondicionado",
@@ -46,11 +46,11 @@ function SpecialistCard({ specialist }: { specialist: TrustSpecialist }) {
           <img
             src={specialist.image}
             alt={specialist.name}
-            className="h-16 w-16 object-cover object-top sm:h-[4.5rem] sm:w-[4.5rem]"
+            className="h-12 w-12 object-cover object-top sm:h-14 sm:w-14"
             loading="lazy"
           />
         </div>
-        <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-success text-[10px] font-bold text-success-foreground">
+        <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-card bg-success text-[9px] font-bold text-success-foreground">
           ✓
         </span>
       </div>
