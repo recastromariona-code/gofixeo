@@ -347,12 +347,21 @@ function SearchPage() {
               {loadingProviders ? (
                 <SkeletonGrid />
               ) : providers.length === 0 ? (
-                <EmptyState
-                  title="Aún no hay especialistas disponibles"
-                  desc="Sé el primer prestador de servicios en esta categoría."
-                  ctaLabel="Ofrecer mis servicios"
-                  to="/become-provider"
-                />
+                isClient ? (
+                  <EmptyState
+                    title="Aún no hay especialistas para esta búsqueda"
+                    desc="Prueba con otra categoría o publica una solicitud para recibir propuestas."
+                    ctaLabel="Publicar una solicitud"
+                    to="/requests/new"
+                  />
+                ) : (
+                  <EmptyState
+                    title="Aún no hay especialistas disponibles"
+                    desc="Sé el primer prestador de servicios en esta categoría."
+                    ctaLabel="Ofrecer mis servicios"
+                    to="/become-provider"
+                  />
+                )
               ) : (
                 <div className="grid gap-4">
                   {providers.map((p) => <ProviderCard key={p.id} provider={p} />)}
@@ -364,12 +373,21 @@ function SearchPage() {
               {loadingServices ? (
                 <SkeletonGrid />
               ) : services.length === 0 ? (
-                <EmptyState
-                  title="Aún no hay servicios publicados"
-                  desc="Publica tus servicios con precio de referencia para atraer clientes."
-                  ctaLabel="Publicar un servicio"
-                  to="/become-provider"
-                />
+                isClient ? (
+                  <EmptyState
+                    title="No encontramos servicios con esos filtros"
+                    desc="Ajusta la categoría, zona o presupuesto, o publica una solicitud para recibir cotizaciones."
+                    ctaLabel="Publicar una solicitud"
+                    to="/requests/new"
+                  />
+                ) : (
+                  <EmptyState
+                    title="Aún no hay servicios publicados"
+                    desc="Publica tus servicios con precio de referencia para atraer clientes."
+                    ctaLabel="Publicar un servicio"
+                    to="/become-provider"
+                  />
+                )
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2">
                   {services.map((s) => (
