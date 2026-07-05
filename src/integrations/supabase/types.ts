@@ -116,6 +116,39 @@ export type Database = {
           },
         ]
       }
+      phone_verification_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          phone_normalized: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          phone_normalized: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone_normalized?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolio_items: {
         Row: {
           created_at: string
@@ -165,6 +198,8 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          phone_normalized: string | null
+          phone_verified_at: string | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at: string
         }
@@ -175,6 +210,8 @@ export type Database = {
           full_name?: string | null
           id: string
           phone?: string | null
+          phone_normalized?: string | null
+          phone_verified_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
@@ -185,6 +222,8 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          phone_normalized?: string | null
+          phone_verified_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
@@ -536,7 +575,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      normalize_phone: { Args: { p: string }; Returns: string }
     }
     Enums: {
       request_status:

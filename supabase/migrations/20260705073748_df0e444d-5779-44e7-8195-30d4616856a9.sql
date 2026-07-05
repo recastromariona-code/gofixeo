@@ -1,0 +1,1 @@
+alter function public.normalize_phone(text) set search_path = public;
