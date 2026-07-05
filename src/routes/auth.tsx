@@ -40,6 +40,7 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && user && !showRoleDialog) {
@@ -98,6 +99,7 @@ function AuthPage() {
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "signup") {
+      setVerificationEmail(null);
       if (password !== confirmPassword) {
         toast.error("Las contraseñas no coinciden");
         return;
@@ -143,7 +145,8 @@ function AuthPage() {
           navigate({ to: "/search" });
         }
       } else {
-        toast.success("Revisa tu correo para confirmar tu cuenta.");
+        setVerificationEmail(email);
+        toast.success("En un momento te llegara un mensaje para verificar tu correo.");
         setShowRoleDialog(false);
       }
     } catch (err) {
@@ -189,6 +192,19 @@ function AuthPage() {
               ? "Empieza a contratar o a ofrecer servicios en minutos."
               : "Ingresa a tu cuenta para continuar."}
           </p>
+          {verificationEmail && (
+            <div className="mt-4 rounded-xl border border-primary/20 bg-brand-soft/60 p-4 text-sm text-foreground">
+              <div className="flex gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <div>
+                  <p className="font-semibold">Verifica tu correo para activar la cuenta</p>
+                  <p className="mt-1 text-muted-foreground">
+                    En un momento te llegara un mensaje a {verificationEmail}. Abre ese correo y confirma tu cuenta; despues volveras a FIXEO con la sesion iniciada.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="mt-6 space-y-3">
             <Button
