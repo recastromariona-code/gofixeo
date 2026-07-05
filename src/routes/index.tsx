@@ -19,17 +19,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TrustSpecialistsBar } from "@/components/TrustSpecialistsBar";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useState } from "react";
-import techAc1 from "@/assets/tech-ac-1.png.asset.json";
-import techAc2 from "@/assets/tech-ac-2.png.asset.json";
-import techAc3 from "@/assets/tech-ac-3.png.asset.json";
-import techAc4 from "@/assets/tech-ac-4.png.asset.json";
-
-const TRUST_SPECIALISTS = [
-  { url: techAc1.url, name: "Camila", role: "Técnica HVAC certificada" },
-  { url: techAc2.url, name: "Kenji", role: "Refrigeración industrial" },
-  { url: techAc3.url, name: "Marco", role: "Instalación y mantenimiento" },
-  { url: techAc4.url, name: "Ricardo", role: "Mantenimiento HVAC" },
-];
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -274,30 +263,7 @@ function Landing() {
             </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            {TRUST_SPECIALISTS.map((s, i) => (
-              <motion.div
-                key={s.name}
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.06 }}
-                whileHover={{ y: -3 }}
-                className="group relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-300 hover:h-24 hover:w-40 hover:border-primary/40 hover:shadow-elevated sm:h-24 sm:w-24 sm:hover:w-48"
-              >
-                <img
-                  src={s.url}
-                  alt={`${s.name}, ${s.role}`}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-background/95 via-background/70 to-transparent px-2 py-1.5 text-left opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <p className="text-xs font-semibold leading-tight text-foreground">{s.name}</p>
-                  <p className="text-[10px] leading-tight text-muted-foreground">{s.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <TrustSpecialistsBar />
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {TRUST_PILLARS.map((item, i) => (

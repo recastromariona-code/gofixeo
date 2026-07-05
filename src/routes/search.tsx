@@ -29,7 +29,7 @@ export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
       { title: "Marketplace — FIXEO" },
-      { name: "description", content: "Encuentra prestadores, servicios ofertados y solicitudes abiertas de trabajo." },
+      { name: "description", content: "Encuentra especialistas, servicios ofertados y solicitudes abiertas de trabajo." },
     ],
   }),
   component: SearchPage,
@@ -249,7 +249,7 @@ function SearchPage() {
             {!isProvider && (
               <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <TabsList className="grid min-h-11 flex-1 grid-cols-2 rounded-xl">
-                  <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
+                  <TabsTrigger value="providers" className="rounded-lg">Especialistas</TabsTrigger>
                   <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
                 </TabsList>
                 {activeTab === "providers" && (
@@ -336,7 +336,7 @@ function SearchPage() {
               {!user ? (
                 <EmptyState
                   title="Inicia sesión para ver oportunidades"
-                  desc="Las solicitudes abiertas están disponibles para prestadores registrados."
+                  desc="Las solicitudes abiertas están disponibles para quienes ofrecen servicios en la plataforma."
                   ctaLabel="Ingresar"
                   to="/auth"
                 />

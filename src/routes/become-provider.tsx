@@ -273,7 +273,7 @@ function BecomeProvider() {
       }
     },
     onSuccess: () => {
-      toast.success("¡Perfil de prestador guardado!");
+      toast.success("¡Perfil profesional guardado!");
       qc.invalidateQueries();
       navigate({ to: "/dashboard" });
     },
@@ -292,7 +292,7 @@ function BecomeProvider() {
               <Wrench className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Perfil de prestador de servicios</h1>
+              <h1 className="text-2xl font-bold">Mi perfil profesional</h1>
               <p className="text-sm text-muted-foreground">
                 Solo pedimos lo esencial para publicar tu perfil. Puedes ampliar los detalles cuando quieras.
               </p>

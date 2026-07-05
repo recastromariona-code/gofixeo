@@ -75,7 +75,7 @@ function Consent() {
       <div className="mt-8 w-full rounded-2xl border border-border bg-card p-6 shadow-elevated">
         <h1 className="text-xl font-bold">Conectar {clientName} a FIXEO</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          <strong>{clientName}</strong> podrá usar FIXEO en tu nombre: buscar prestadores y servicios,
+          <strong>{clientName}</strong> podrá usar FIXEO en tu nombre: buscar especialistas y servicios,
           consultar tus solicitudes y crear nuevas solicitudes o cotizaciones. Puedes revocar el acceso
           desde tu cuenta en cualquier momento.
         </p>
