@@ -11,9 +11,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, MapPin, Calendar, Clock, DollarSign, Zap, MessageSquare, CheckCircle2, Star,
-  ShieldCheck, Award, XCircle, Loader2,
+  ShieldCheck, Award, XCircle, Loader2, Send,
 } from "lucide-react";
 
 export const Route = createFileRoute("/requests/$requestId")({
