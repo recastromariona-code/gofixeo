@@ -19,6 +19,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TrustSpecialistsBar } from "@/components/TrustSpecialistsBar";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useState } from "react";
+import techAc1 from "@/assets/tech-ac-1.png.asset.json";
+import techAc2 from "@/assets/tech-ac-2.png.asset.json";
+import techAc3 from "@/assets/tech-ac-3.png.asset.json";
+
+const TRUST_SPECIALISTS = [
+  { url: techAc1.url, name: "Camila", role: "Técnica HVAC certificada" },
+  { url: techAc2.url, name: "Kenji", role: "Refrigeración industrial" },
+  { url: techAc3.url, name: "Marco", role: "Instalación y mantenimiento" },
+];
 
 export const Route = createFileRoute("/")({
   component: Landing,
