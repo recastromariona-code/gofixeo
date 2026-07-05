@@ -173,7 +173,7 @@ function NewRequestPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="city"><MapPin className="mr-1 inline h-3.5 w-3.5" />Ciudad *</Label>
-              <Input id="city" placeholder="Ej. Bogotá" value={city} onChange={(e) => setCity(e.target.value)} required />
+              <Input id="city" placeholder="Ej. San Salvador" value={city} onChange={(e) => setCity(e.target.value)} required />
             </div>
           </div>
 
