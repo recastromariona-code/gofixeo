@@ -34,7 +34,7 @@ export default defineTool({
     const { data, error } = await sb
       .from("quote_requests")
       .insert({
-        buyer_id: ctx.getUserId(),
+        client_id: ctx.getUserId(),
         category_id: cat.id,
         title: input.title,
         description: input.description,

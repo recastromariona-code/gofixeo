@@ -128,7 +128,6 @@
                 "pending",
                 "quoted",
                 "accepted",
-                "in_progress",
                 "completed",
                 "cancelled"
               ]

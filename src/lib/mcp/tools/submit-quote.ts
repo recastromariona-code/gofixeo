@@ -16,6 +16,7 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
   handler: async ({ request_id, amount, message, estimated_days }, ctx) => {
     if (!ctx.isAuthenticated()) return errorResult("Debes estar autenticado como prestador.");
+    if (!request_id || amount == null || !message) return errorResult("Faltan parámetros obligatorios.");
     const sb = supabaseForUser(ctx);
     const { data, error } = await sb
       .from("quotes")
@@ -23,7 +24,7 @@ export default defineTool({
         request_id,
         provider_id: ctx.getUserId(),
         amount,
-        message,
+        notes: message,
         estimated_days: estimated_days ?? null,
       })
       .select("id, amount, created_at")
