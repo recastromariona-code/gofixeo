@@ -77,8 +77,9 @@ export const Route = createFileRoute("/api/public/n8n/rpc")({
               let query = sb
                 .from("services")
                 .select(
-                  "id, title, description, price_from, price_to, providers!inner(id, profiles!inner(full_name, city)), categories(slug, name)",
+                  "id, title, description, starting_price, providers!inner(id, profiles!providers_id_fkey!inner(full_name, city)), categories(slug, name)",
                 )
+                .eq("is_active", true)
                 .limit(20);
               if (cat) {
                 const { data: c } = await sb.from("categories").select("id").eq("slug", cat).maybeSingle();
@@ -274,7 +275,7 @@ export const Route = createFileRoute("/api/public/n8n/rpc")({
               if (!p.success) return bad(400, "invalid_input", { issues: p.error.issues });
               const me = await resolveVerified(sb, p.data.phone);
               if (!me) return bad(403, "phone_not_verified");
-              const upd: Record<string, unknown> = {};
+              const upd: { full_name?: string; city?: string } = {};
               if (p.data.full_name !== undefined) upd.full_name = p.data.full_name;
               if (p.data.city !== undefined) upd.city = p.data.city;
               if (Object.keys(upd).length) {
