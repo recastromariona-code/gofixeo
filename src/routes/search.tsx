@@ -366,11 +366,13 @@ function SearchPage() {
             value={activeTab}
             onValueChange={(v) => navigate({ to: "/search", search: { q: initialQ, category, tab: v } as never })}
           >
-            <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
-              <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
-              <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
-              <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
-            </TabsList>
+            {!isProvider && (
+              <TabsList className="mb-6 grid w-full grid-cols-3 rounded-xl">
+                <TabsTrigger value="providers" className="rounded-lg">Prestadores</TabsTrigger>
+                <TabsTrigger value="services" className="rounded-lg">Servicios</TabsTrigger>
+                <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
+              </TabsList>
+            )}
 
             <TabsContent value="providers">
               {!loadingProviders && providers.length > 0 && (
