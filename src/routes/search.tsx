@@ -114,7 +114,7 @@ function SearchPage() {
 
   // ============= SERVICES =============
   const { data: services = [], isLoading: loadingServices } = useQuery({
-    queryKey: ["market-services", { q: initialQ, category: activeCategory?.id }],
+    queryKey: ["market-services", { q: initialQ, category: activeCategory?.id, city: cityParam, min, max }],
     enabled: activeTab === "services",
     queryFn: async () => {
       let query = supabase
@@ -122,13 +122,15 @@ function SearchPage() {
         .select(
           `id, title, description, starting_price, provider_id,
            categories!inner(name, slug),
-           providers!inner(id, rating, reviews_count, profiles!inner(full_name, city, avatar_url))`,
+           providers!inner(id, rating, reviews_count, service_areas, profiles!inner(full_name, city, avatar_url))`,
         )
         .eq("is_active", true)
         .order("starting_price", { ascending: true, nullsFirst: false })
         .limit(50);
 
       if (activeCategory) query = query.eq("category_id", activeCategory.id);
+      if (min != null) query = query.or(`starting_price.gte.${min},starting_price.is.null`);
+      if (max != null) query = query.or(`starting_price.lte.${max},starting_price.is.null`);
 
       const { data, error } = await query;
       if (error) throw error;
@@ -140,6 +142,14 @@ function SearchPage() {
             s.title.toLowerCase().includes(needle) ||
             (s.description ?? "").toLowerCase().includes(needle),
         );
+      }
+      if (cityParam) {
+        const needle = cityParam.toLowerCase();
+        rows = rows.filter((s) => {
+          const providerCity = (s.providers?.profiles?.city ?? "").toLowerCase();
+          const areas: string[] = (s.providers?.service_areas ?? []) as string[];
+          return providerCity.includes(needle) || areas.some((a) => (a ?? "").toLowerCase().includes(needle));
+        });
       }
       return rows;
     },
