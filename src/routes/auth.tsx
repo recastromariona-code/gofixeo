@@ -234,12 +234,12 @@ function AuthPage() {
     e.preventDefault();
     if (mode === "signup") {
       setVerificationEmail(null);
-      if (password !== confirmPassword) {
-        toast.error("Las contraseñas no coinciden");
-        return;
-      }
       if (password.length < 6) {
         toast.error("La contraseña debe tener al menos 6 caracteres");
+        return;
+      }
+      if (!fullName.trim()) {
+        toast.error("Escribe tu nombre para continuar");
         return;
       }
       setSignupMethod("email");
@@ -258,6 +258,7 @@ function AuthPage() {
       setLoading(false);
     }
   };
+
 
   const selectRole = async (role: UserRole) => {
     if (signupMethod === "google") {
