@@ -38,6 +38,7 @@ import { cn } from "@/lib/utils";
 type NavItem = { label: string; to: string; icon: typeof Home; exact: boolean };
 
 const guestNavItems: readonly NavItem[] = [
+  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
   { label: "Ofrecer mis servicios", to: "/become-provider", icon: Wrench, exact: false },
 ];
