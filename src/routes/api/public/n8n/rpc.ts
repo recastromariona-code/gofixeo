@@ -233,6 +233,24 @@ export const Route = createFileRoute("/api/public/n8n/rpc")({
                 .select("id, title, status")
                 .single();
               if (error) return bad(500, error.message);
+              // Fire-and-forget: avisar a proveedores por WhatsApp
+              const notifyUrl = process.env.N8N_NEW_REQUEST_WEBHOOK_URL;
+              if (notifyUrl) {
+                fetch(notifyUrl, {
+                  method: "POST",
+                  headers: {
+                    "content-type": "application/json",
+                    "x-fixeo-secret": process.env.N8N_WEBHOOK_SECRET ?? "",
+                  },
+                  body: JSON.stringify({
+                    request_id: data.id,
+                    title: p.data.title,
+                    category: p.data.category,
+                    city: p.data.city,
+                    urgency: p.data.urgency ?? "medium",
+                  }),
+                }).catch((e) => console.error("notify new_request failed", e));
+              }
               return ok({ ok: true, request: data });
             }
 

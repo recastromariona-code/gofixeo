@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { notifyNewRequest } from "@/lib/n8n.functions";
 import { useAuth } from "@/lib/auth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -54,10 +56,12 @@ function NewRequestPage() {
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const { data } = await supabase.from("categories").select("id, name, icon").order("name");
+      const { data } = await supabase.from("categories").select("id, slug, name, icon").order("name");
       return data ?? [];
     },
   });
+
+  const notify = useServerFn(notifyNewRequest);
 
   const uploadPhotos = async (files: FileList | null) => {
     if (!files || !user) return;
@@ -117,6 +121,17 @@ function NewRequestPage() {
         .select("id")
         .single();
       if (error) throw error;
+      const cat = categories.find((c) => c.id === categoryId);
+      // Fire-and-forget: notifica a n8n para avisar por WhatsApp a los proveedores.
+      notify({
+        data: {
+          request_id: data.id as string,
+          title: title.trim(),
+          category: cat?.slug ?? "",
+          city: city.trim(),
+          urgency,
+        },
+      }).catch(() => {});
       return data.id as string;
     },
     onSuccess: (id) => {
