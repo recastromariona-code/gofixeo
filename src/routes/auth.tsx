@@ -69,9 +69,8 @@ function AuthPage() {
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
