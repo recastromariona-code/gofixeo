@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, Loader2, Eye, EyeOff, Home, Wrench } from "lucide-react";
+import { Mail, Loader2, Eye, EyeOff, Home, Wrench, ArrowLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -177,10 +177,18 @@ function AuthPage() {
       </div>
 
       {/* Right / form */}
-      <div className="flex min-h-svh items-center justify-center bg-background p-3 md:min-h-0 md:p-6">
+      <div className="relative flex min-h-svh items-center justify-center bg-background p-3 md:min-h-0 md:p-6">
+        <Button asChild variant="ghost" size="sm" className="absolute left-3 top-3 rounded-lg md:left-6 md:top-6">
+          <Link to="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Volver al inicio
+          </Link>
+        </Button>
         <div className="w-full max-w-md">
           <div className="mb-8 md:hidden">
-            <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
+            <Link to="/" aria-label="FIXEO - inicio">
+              <img src={logoLight.url} alt="FIXEO" className="h-10 w-auto" />
+            </Link>
           </div>
 
           <h1 className="text-2xl font-bold">
