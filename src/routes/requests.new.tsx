@@ -56,10 +56,12 @@ function NewRequestPage() {
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const { data } = await supabase.from("categories").select("id, name, icon").order("name");
+      const { data } = await supabase.from("categories").select("id, slug, name, icon").order("name");
       return data ?? [];
     },
   });
+
+  const notify = useServerFn(notifyNewRequest);
 
   const uploadPhotos = async (files: FileList | null) => {
     if (!files || !user) return;
