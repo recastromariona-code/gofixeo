@@ -326,35 +326,37 @@ function Landing() {
         </div>
       </section>
 
-      {/* CTA ofrecer servicios */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl gradient-brand p-8 shadow-elevated md:p-14">
-          <div className="relative z-10 max-w-2xl text-primary-foreground">
-            <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground/90">
-              Ofrecer servicios
-            </span>
-            <h2 className="mt-4 text-3xl font-bold sm:text-4xl">¿Eres técnico o dominas un oficio?</h2>
-            <p className="mt-3 text-base leading-relaxed text-primary-foreground/90">
-              Consigue clientes en tu ciudad. Regístrate gratis y recibe cotizaciones directamente en tu WhatsApp.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="secondary" className="rounded-xl">
-                <Link to="/become-provider">Ofrecer mis servicios</Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-xl border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20 hover:text-primary-foreground"
-              >
-                <Link to="/search">Ver cómo lo ven los clientes</Link>
-              </Button>
+      {/* CTA ofrecer servicios (oculto para clientes) */}
+      {!isClient && (
+        <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
+          <div className="relative overflow-hidden rounded-3xl gradient-brand p-8 shadow-elevated md:p-14">
+            <div className="relative z-10 max-w-2xl text-primary-foreground">
+              <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground/90">
+                Ofrecer servicios
+              </span>
+              <h2 className="mt-4 text-3xl font-bold sm:text-4xl">¿Eres técnico o dominas un oficio?</h2>
+              <p className="mt-3 text-base leading-relaxed text-primary-foreground/90">
+                Consigue clientes en tu ciudad. Regístrate gratis y recibe cotizaciones directamente en tu WhatsApp.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button asChild size="lg" variant="secondary" className="rounded-xl">
+                  <Link to="/become-provider">Ofrecer mis servicios</Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="rounded-xl border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20 hover:text-primary-foreground"
+                >
+                  <Link to="/search">Ver cómo lo ven los clientes</Link>
+                </Button>
+              </div>
             </div>
+            <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 right-24 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
           </div>
-          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 right-24 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>
