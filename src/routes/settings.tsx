@@ -9,7 +9,7 @@ function SettingsRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate({ to: "/become-provider" });
+    navigate({ to: "/profile", replace: true });
   }, [navigate]);
 
   return null;

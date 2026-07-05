@@ -2,12 +2,13 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { FixeoLogo } from "@/components/FixeoLogo";
+import { useUserRole } from "@/hooks/use-user-role";
 
-const exploreLinks = [
+const baseExploreLinks = [
   { label: "Inicio", to: "/" as const },
   { label: "Buscar especialista", to: "/search" as const },
-  { label: "Ofrecer mis servicios", to: "/become-provider" as const },
 ];
+const providerExploreLink = { label: "Ofrecer mis servicios", to: "/become-provider" as const };
 
 const categoryLinks = [
   { label: "Aires acondicionados", slug: "aires-acondicionados" },
@@ -38,8 +39,11 @@ function FooterLink({
 }
 
 export function Footer() {
+  const { isClient } = useUserRole();
+  const exploreLinks = isClient ? baseExploreLinks : [...baseExploreLinks, providerExploreLink];
   return (
     <footer className="mt-auto border-t border-border bg-muted/40">
+
       <div className="h-1 gradient-brand" />
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
