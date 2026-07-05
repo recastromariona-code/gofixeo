@@ -38,13 +38,11 @@ import { cn } from "@/lib/utils";
 type NavItem = { label: string; to: string; icon: typeof Home; exact: boolean };
 
 const guestNavItems: readonly NavItem[] = [
-  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
   { label: "Ofrecer mis servicios", to: "/become-provider", icon: Wrench, exact: false },
 ];
 
 const buyerNavItems: readonly NavItem[] = [
-  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Buscar servicio", to: "/search", icon: Search, exact: false },
   { label: "Mis solicitudes", to: "/requests", icon: FileText, exact: false },
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
@@ -52,7 +50,6 @@ const buyerNavItems: readonly NavItem[] = [
 ];
 
 const providerNavItems: readonly NavItem[] = [
-  { label: "Inicio", to: "/", icon: Home, exact: true },
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: false },
   { label: "Oportunidades", to: "/search", icon: Briefcase, exact: false },
   { label: "Mi perfil profesional", to: "/become-provider", icon: Wrench, exact: false },
