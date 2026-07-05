@@ -64,7 +64,7 @@ function SearchPage() {
         .from("providers")
         .select(
           `id, bio, rating, reviews_count, is_verified,
-           profiles!inner(full_name, city, avatar_url),
+           profiles!providers_id_fkey!inner(full_name, city, avatar_url),
            provider_categories!left(categories(name, slug))`,
         )
         .order("rating", { ascending: false })

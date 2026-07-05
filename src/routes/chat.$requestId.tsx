@@ -35,7 +35,7 @@ function ChatPage() {
         .from("quote_requests")
         .select(`id, description, status, client_id, provider_id, address, preferred_date,
                  client:profiles!quote_requests_client_id_fkey(full_name, avatar_url),
-                 provider:providers!inner(id, whatsapp_number, profiles!inner(full_name, avatar_url, phone))`)
+                 provider:providers!inner(id, whatsapp_number, profiles!providers_id_fkey!inner(full_name, avatar_url, phone))`)
         .eq("id", requestId)
         .maybeSingle();
       if (error) throw error;
