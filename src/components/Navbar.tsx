@@ -15,10 +15,10 @@ import {
 import { useState } from "react";
 
 export function Navbar() {
-  const { user, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { data: profile } = useQuery({
+  const { data: profile, isSuccess: profileLoaded } = useQuery({
     queryKey: ["profile-role", user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -27,7 +27,7 @@ export function Navbar() {
     },
     enabled: !!user,
   });
-  const showProviderLinks = !!user && profile?.role === "provider";
+  const showProviderLinks = !authLoading && !!user && profileLoaded && profile?.role === "provider";
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
