@@ -2,12 +2,13 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { FixeoLogo } from "@/components/FixeoLogo";
+import { useUserRole } from "@/hooks/use-user-role";
 
-const exploreLinks = [
+const baseExploreLinks = [
   { label: "Inicio", to: "/" as const },
   { label: "Buscar especialista", to: "/search" as const },
-  { label: "Ofrecer mis servicios", to: "/become-provider" as const },
 ];
+const providerExploreLink = { label: "Ofrecer mis servicios", to: "/become-provider" as const };
 
 const categoryLinks = [
   { label: "Aires acondicionados", slug: "aires-acondicionados" },
