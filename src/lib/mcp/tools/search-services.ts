@@ -32,7 +32,7 @@ export default defineTool({
       .select(
         `id, title, description, starting_price, provider_id,
          categories!inner(name, slug),
-         providers!inner(id, rating, reviews_count, service_areas, profiles!inner(full_name, city))`,
+         providers!inner(id, rating, reviews_count, service_areas, profiles!providers_id_fkey!inner(full_name, city))`,
       )
       .eq("is_active", true)
       .order("starting_price", { ascending: true, nullsFirst: false })

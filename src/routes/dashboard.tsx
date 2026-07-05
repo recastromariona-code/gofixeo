@@ -66,7 +66,7 @@ function Dashboard() {
       if (!user) return [];
       const { data } = await supabase
         .from("quote_requests")
-        .select(`id, description, status, created_at, provider:providers(profiles(full_name, avatar_url))`)
+        .select(`id, description, status, created_at, provider:providers(profiles!providers_id_fkey(full_name, avatar_url))`)
         .eq("client_id", user.id)
         .order("created_at", { ascending: false });
       return data ?? [];
@@ -133,7 +133,7 @@ function Dashboard() {
       if (!user) return [];
       const { data } = await supabase
         .from("favorites")
-        .select(`provider_id, providers!inner(id, rating, reviews_count, profiles!inner(full_name, avatar_url, city))`)
+        .select(`provider_id, providers!inner(id, rating, reviews_count, profiles!providers_id_fkey!inner(full_name, avatar_url, city))`)
         .eq("client_id", user.id);
       return data ?? [];
     },

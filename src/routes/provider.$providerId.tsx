@@ -33,7 +33,7 @@ function ProviderProfile() {
         .from("providers")
         .select(
           `id, bio, years_experience, certifications, gallery_urls, service_areas, rating, reviews_count, is_verified, whatsapp_number,
-           profiles!inner(full_name, city, avatar_url, phone),
+           profiles!providers_id_fkey!inner(full_name, city, avatar_url, phone),
            provider_categories(categories(id, name, slug)),
            services(id, title, description, starting_price, is_active, categories(name))`,
         )

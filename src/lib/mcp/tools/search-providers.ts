@@ -29,7 +29,7 @@ export default defineTool({
       .from("providers")
       .select(
         `id, bio, rating, reviews_count, is_verified, service_areas,
-         profiles!inner(full_name, city),
+         profiles!providers_id_fkey!inner(full_name, city),
          provider_categories!left(categories(name, slug))`,
       )
       .order("rating", { ascending: false })

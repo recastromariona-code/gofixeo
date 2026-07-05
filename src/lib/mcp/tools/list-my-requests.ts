@@ -26,7 +26,7 @@ export default defineTool({
         `id, title, description, city, urgency, budget_min, budget_max, status,
          preferred_date, created_at,
          categories(name, slug),
-         quotes(count)`,
+         quotes!quotes_request_id_fkey(count)`,
       )
       .eq("client_id", userId)
       .order("created_at", { ascending: false })
